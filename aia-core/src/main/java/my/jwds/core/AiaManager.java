@@ -12,9 +12,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class AiaManager implements AiaApiScanner,AiaTemplateManager, AiaPluginManager, AiaApiManager {
+public class AiaManager implements AiaTemplateManager, AiaPluginManager, AiaApiManager {
 
-    private AiaApiScanner apiScanner;
 
     private AiaTemplateManager templateManager;
 
@@ -22,29 +21,17 @@ public class AiaManager implements AiaApiScanner,AiaTemplateManager, AiaPluginMa
 
     private AiaApiManager apiManager;
 
-    private DefinitionResolver definitionResolver;
 
-    private ModelResolver modelResolver;
-
-    public AiaManager(AiaApiScanner apiScanner, AiaTemplateManager templateManager, AiaPluginManager pluginManager, AiaApiManager apiManager, DefinitionResolver definitionResolver, ModelResolver modelResolver) {
-        this.apiScanner = apiScanner;
+    public AiaManager(AiaTemplateManager templateManager, AiaPluginManager pluginManager, AiaApiManager apiManager) {
         this.templateManager = templateManager;
         this.pluginManager = pluginManager;
         this.apiManager = apiManager;
-        this.definitionResolver = definitionResolver;
-        this.modelResolver = modelResolver;
     }
 
     public AiaManager() {
     }
 
-    public AiaApiScanner getApiScanner() {
-        return apiScanner;
-    }
 
-    public void setApiScanner(AiaApiScanner apiScanner) {
-        this.apiScanner = apiScanner;
-    }
 
     public AiaTemplateManager getTemplateManager() {
         return templateManager;
@@ -70,120 +57,136 @@ public class AiaManager implements AiaApiScanner,AiaTemplateManager, AiaPluginMa
         this.apiManager = apiManager;
     }
 
-    public DefinitionResolver getDefinitionResolver() {
-        return definitionResolver;
-    }
-
-    public void setDefinitionResolver(DefinitionResolver definitionResolver) {
-        this.definitionResolver = definitionResolver;
-    }
-
-    public ModelResolver getModelResolver() {
-        return modelResolver;
-    }
-
-    public void setModelResolver(ModelResolver modelResolver) {
-        this.modelResolver = modelResolver;
-    }
-
 
     /**
      * 注册api
      *
-     * @param api
+     * @param api api
      */
     @Override
     public void registerApi(InvokeApi api) {
-        apiManager.registerApi(api);
+
     }
 
     /**
-     * 注册api
+     * 根据组注册api列表
      *
-     * @param group
-     * @param apis
+     * @param group 组
+     * @param apis  api列表
      */
     @Override
     public void registerGroupApi(String group, List<InvokeApi> apis) {
-        apiManager.registerGroupApi(group, apis);
+
     }
 
     /**
-     * 注册api
+     * 注册所有api
      *
-     * @param all
+     * @param all 所有api
      */
     @Override
     public void registerAll(Map<String, List<InvokeApi>> all) {
-        apiManager.registerAll(all);
+
     }
 
     /**
      * 获取组
      *
-     * @return
+     * @return 组列表
      */
     @Override
     public Set<String> getGroup() {
-        return apiManager.getGroup();
+        return null;
     }
 
     /**
      * 获取组
      *
-     * @param group
+     * @param group 组名
      * @return
      */
     @Override
     public List<InvokeApi> getGroupInvokeApi(String group) {
-        return apiManager.getGroupInvokeApi(group);
+        return null;
     }
 
     /**
      * 全部api
      *
-     * @return
+     * @return 组和api的键值对
      */
     @Override
     public Map<String, List<InvokeApi>> allApi() {
         return null;
     }
 
-    @Override
-    public void startScanner(AiaManager manager) {
-
-    }
-
+    /**
+     * 添加模板
+     *
+     * @param template 模板
+     */
     @Override
     public void add(AiaTemplate template) {
 
     }
 
+    /**
+     * 删除模板
+     *
+     * @param template 模板
+     */
     @Override
     public void remove(AiaTemplate template) {
 
     }
 
+    /**
+     * 修改模板
+     *
+     * @param name     名称
+     * @param template 模板
+     */
     @Override
     public void update(String name, AiaTemplate template) {
 
     }
 
+    /**
+     * 全部模板
+     *
+     * @return 全部模板
+     */
     @Override
     public Map<String, Map<String, AiaTemplate>> allTemplate() {
         return null;
     }
 
+    /**
+     * 根据组获取模板
+     *
+     * @param group 根据组获取模板
+     * @return
+     */
     @Override
     public Map<String, AiaTemplate> getGroupTemplate(String group) {
         return null;
     }
 
+    /**
+     * 注册插件
+     *
+     * @param plugin
+     */
     @Override
     public void registerPlugin(AiaPlugin plugin) {
 
     }
 
+    /**
+     * 获取全部插件
+     *
+     * @return
+     */
     @Override
     public List<AiaPlugin> allPlugin() {
         return null;

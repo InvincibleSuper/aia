@@ -4,18 +4,36 @@ import java.util.Map;
 
 public interface AiaTemplateManager {
 
+    /**
+     * 添加模板
+     * @param template 模板
+     */
     void add(AiaTemplate template);
 
-
+    /**
+     * 删除模板
+     * @param template 模板
+     */
     void remove(AiaTemplate template);
 
-
+    /**
+     * 修改模板
+     * @param name 名称
+     * @param template 模板
+     */
     void update(String name,AiaTemplate template);
 
-
+    /**
+     * 全部模板
+     * @return 全部模板
+     */
     Map<String,Map<String,AiaTemplate>> allTemplate();
 
-
+    /**
+     * 根据组获取模板
+     * @param group 根据组获取模板
+     * @return
+     */
     Map<String,AiaTemplate> getGroupTemplate(String group);
 
 

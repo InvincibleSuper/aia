@@ -10,35 +10,45 @@
     <version>1.0-SNAPSHOT</version>
     <modules>
         <module>aia-core</module>
-        <module>aia-spring-boot-starter</module>
+        <module>aia-spring-web-starter</module>
         <module>aia-spring-web</module>
+        <module>aia-samples</module>
     </modules>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
-        <spring.version>5.2.8.RELEASE</spring.version>
+        <aia.version>1.0-SNAPSHOT</aia.version>
+        <spring.boot.version>2.5.4</spring.boot.version>
     </properties>
     <dependencyManagement>
         <dependencies>
-            <dependency >
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-context</artifactId>
-                <version>${spring.version}</version>
-                <scope>provided</scope>
-            </dependency >
+
             <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-web</artifactId>
-                <version>${spring.version}</version>
-                <optional>true</optional>
+                <groupId>my.jwds</groupId>
+                <artifactId>aia-core</artifactId>
+                <version>${aia.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>my.jwds</groupId>
+                <artifactId>aia-spring-web</artifactId>
+                <version>${aia.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>my.jwds</groupId>
+                <artifactId>aia-spring-web-starter</artifactId>
+                <version>${aia.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-webmvc</artifactId>
-                <version>${spring.version}</version>
-                <optional>true</optional>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${spring.boot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
             </dependency>
+
         </dependencies>
 
     </dependencyManagement>

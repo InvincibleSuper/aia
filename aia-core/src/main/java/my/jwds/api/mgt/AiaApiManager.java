@@ -11,29 +11,32 @@ public interface AiaApiManager {
 
     /**
      * 注册api
-     * @param api
+     * @param api api
      */
     void registerApi(InvokeApi api);
 
     /**
-     * 注册api
+     * 根据组注册api列表
+     * @param group 组
+     * @param apis api列表
      */
     void registerGroupApi(String group,List<InvokeApi> apis);
 
     /**
-     * 注册api
+     * 注册所有api
+     * @param all 所有api
      */
     void registerAll(Map<String,List<InvokeApi>> all);
 
     /**
      * 获取组
-     * @return
+     * @return 组列表
      */
     Set<String> getGroup();
 
     /**
      * 获取组
-     * @param group
+     * @param group 组名
      * @return
      */
     List<InvokeApi> getGroupInvokeApi(String group);
@@ -41,7 +44,7 @@ public interface AiaApiManager {
 
     /**
      * 全部api
-     * @return
+     * @return 组和api的键值对
      */
     Map<String,List<InvokeApi>> allApi();
 

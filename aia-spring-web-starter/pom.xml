@@ -9,29 +9,16 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>aia-spring-web</artifactId>
+    <artifactId>aia-spring-web-starter</artifactId>
 
     <properties>
-        <maven.compiler.3>8</maven.compiler.3>
+        <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
     </properties>
     <dependencies>
         <dependency>
             <groupId>my.jwds</groupId>
-            <artifactId>aia-core</artifactId>
+            <artifactId>aia-spring-web</artifactId>
         </dependency>
-
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-webmvc</artifactId>
-            <optional>true</optional>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.tomcat.embed</groupId>
-            <artifactId>tomcat-embed-core</artifactId>
-            <optional>true</optional>
-        </dependency>
-
     </dependencies>
 </project>

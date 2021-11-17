@@ -1,6 +1,8 @@
 package my.jwds.core;
 
 import my.jwds.cache.Cache;
+import my.jwds.cache.CacheManager;
+import my.jwds.plugin.AiaPlugin;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -8,11 +10,16 @@ import java.util.Map;
 public class DefaultAiaTemplateManager implements AiaTemplateManager{
 
 
-    private Cache<String,Map<String,AiaTemplate>> cache;
+
+    private Cache<String, Map<String, AiaTemplate>> cache;
 
 
-    public DefaultAiaTemplateManager(Cache<String, Map<String, AiaTemplate>> cache) {
-        this.cache = cache;
+
+    private static final String TEMPLATE_CACHE = "template_cache";
+
+
+    public DefaultAiaTemplateManager(CacheManager manager) {
+        this.cache = manager.getCache(TEMPLATE_CACHE);
     }
 
     @Override

@@ -3,7 +3,7 @@ package my.jwds.config;
 
 public class AiaConfig {
 
-    private  boolean persist = true;
+    private boolean persist = true;
 
 
     private String srcPath;

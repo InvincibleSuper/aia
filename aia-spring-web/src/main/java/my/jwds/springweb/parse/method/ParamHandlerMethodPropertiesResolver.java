@@ -26,6 +26,10 @@ public class ParamHandlerMethodPropertiesResolver implements HandlerMethodProper
 
 
 
+    public ParamHandlerMethodPropertiesResolver(DefinitionResolver definitionResolver, ModelResolver modelResolver) {
+        this.definitionResolver = definitionResolver;
+        this.modelResolver = modelResolver;
+    }
 
     /**
      * 能解析吗

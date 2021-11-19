@@ -3,8 +3,6 @@ package my.jwds.core;
 
 import my.jwds.api.InvokeApi;
 import my.jwds.api.mgt.AiaApiManager;
-import my.jwds.definition.resolver.DefinitionResolver;
-import my.jwds.model.resolver.ModelResolver;
 import my.jwds.plugin.AiaPlugin;
 import my.jwds.plugin.mgt.AiaPluginManager;
 
@@ -12,6 +10,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+
+/**
+ * 总管理类，包含 模板管理器、插件管理器、api管理器
+ * 使用门面模式封装
+ */
 public class AiaManager implements AiaTemplateManager, AiaPluginManager, AiaApiManager {
 
 

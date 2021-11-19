@@ -20,13 +20,13 @@ public class NoParserHandlerMappingParser extends AbstractHandlerMappingParser{
     }
 
     /**
-     * 解析 HandlerMapping
+     * 委托给子类处理
      *
      * @param aiaManager     总管理器
      * @param handlerMapping spring请求处理映射
      */
     @Override
-    public void parse(AiaManager aiaManager, HandlerMapping handlerMapping) {
+    protected void onParse(AiaManager aiaManager, HandlerMapping handlerMapping) {
 
     }
 }

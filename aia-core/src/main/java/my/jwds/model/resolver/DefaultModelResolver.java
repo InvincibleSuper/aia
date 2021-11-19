@@ -1,8 +1,7 @@
 package my.jwds.model.resolver;
 
-import com.sun.org.apache.xpath.internal.operations.Number;
-import my.jwds.definition.PropertyDefinition;
-import my.jwds.definition.resolver.DefinitionResolver;
+import my.jwds.api.definition.FieldDefinition;
+import my.jwds.api.definition.resolver.DefinitionResolver;
 import my.jwds.model.*;
 
 import java.lang.reflect.*;
@@ -59,7 +58,9 @@ public class DefaultModelResolver implements ModelResolver<ModelPropertyResolveI
 
     @Override
     public ModelProperty resolve(ModelPropertyResolveInfo resolveInfo) {
-        return resolveProperty(resolveInfo.getType(),resolveInfo.getName(),resolveInfo.getOrigin(),resolveInfo.getDefinition(),new HashSet());
+        Type origin = resolveInfo.getOrigin() == null ? resolveInfo.getType():resolveInfo.getOrigin();
+        GenericDeclaration declaration = resolveInfo.getDefinition() == null ? getRawClass(resolveInfo.getType()) : resolveInfo.getDefinition();
+        return resolveProperty(resolveInfo.getType(),resolveInfo.getName(),origin,declaration,new HashSet());
     }
 
     protected Model resolveModel(Type type,Set set) {
@@ -69,11 +70,11 @@ public class DefaultModelResolver implements ModelResolver<ModelPropertyResolveI
         set.add(clz);
         Set<String> fieldProcessCache = new HashSet<>();
         List<ModelProperty>  properties = new ArrayList<>();
-        Map<Field, PropertyDefinition> propertyMap = definitionResolver.resolveProperty(clz);
-        for (PropertyDefinition propertyDefinition : propertyMap.values()) {
-            Field field = propertyDefinition.getField();
+        Map<Field, FieldDefinition> propertyMap = definitionResolver.resolveField(clz);
+        for (FieldDefinition fieldDefinition : propertyMap.values()) {
+            Field field = fieldDefinition.getField();
             ModelProperty property = resolveProperty(field.getGenericType(),field.getName(),type, field.getDeclaringClass(),set);
-            property.setDefinition(propertyDefinition.getDefinition());
+            property.setDefinition(fieldDefinition.getDefinition());
             properties.add(property);
             fieldProcessCache.add(field.getName());
         }
@@ -217,7 +218,6 @@ public class DefaultModelResolver implements ModelResolver<ModelPropertyResolveI
         }
         return null;
     }
-
 
 
 }

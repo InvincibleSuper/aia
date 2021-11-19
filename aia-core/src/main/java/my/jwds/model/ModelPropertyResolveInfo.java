@@ -3,7 +3,7 @@ package my.jwds.model;
 import java.lang.reflect.GenericDeclaration;
 import java.lang.reflect.Type;
 
-public class ModelPropertyResolveInfo {
+public class ModelPropertyResolveInfo implements Type{
     private Type type;
     private String name;
     private Type origin;
@@ -41,11 +41,18 @@ public class ModelPropertyResolveInfo {
         this.definition = definition;
     }
 
+
+
     public ModelPropertyResolveInfo(Type type, String name, Type origin, GenericDeclaration definition) {
         this.type = type;
         this.name = name;
         this.origin = origin;
         this.definition = definition;
+    }
+
+    public ModelPropertyResolveInfo(Type type, String name) {
+        this.type = type;
+        this.name = name;
     }
 
     public ModelPropertyResolveInfo() {

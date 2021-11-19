@@ -1,4 +1,4 @@
-package my.jwds.definition;
+package my.jwds.api.definition;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -12,7 +12,7 @@ public class ClassDefinition {
     private Map<Method,MethodDefinition> methodDefinitions;
 
 
-    private Map<Field,PropertyDefinition>  propertyDefinitions;
+    private Map<Field, FieldDefinition>  fieldDefinitions;
 
 
     private String definition;
@@ -34,12 +34,19 @@ public class ClassDefinition {
         this.methodDefinitions = methodDefinitions;
     }
 
-    public Map<Field, PropertyDefinition> getPropertyDefinitions() {
-        return propertyDefinitions;
+    public Map<Field, FieldDefinition> getFieldDefinitions() {
+        return fieldDefinitions;
     }
 
-    public void setPropertyDefinitions(Map<Field, PropertyDefinition> propertyDefinitions) {
-        this.propertyDefinitions = propertyDefinitions;
+    public void setFieldDefinitions(Map<Field, FieldDefinition> fieldDefinitions) {
+        this.fieldDefinitions = fieldDefinitions;
+    }
+
+    public ClassDefinition(Class clz, Map<Method, MethodDefinition> methodDefinitions, Map<Field, FieldDefinition> fieldDefinitions, String definition) {
+        this.clz = clz;
+        this.methodDefinitions = methodDefinitions;
+        this.fieldDefinitions = fieldDefinitions;
+        this.definition = definition;
     }
 
     public String getDefinition() {
@@ -47,13 +54,6 @@ public class ClassDefinition {
     }
 
     public void setDefinition(String definition) {
-        this.definition = definition;
-    }
-
-    public ClassDefinition(Class clz, Map<Method, MethodDefinition> methodDefinitions, Map<Field, PropertyDefinition> propertyDefinitions, String definition) {
-        this.clz = clz;
-        this.methodDefinitions = methodDefinitions;
-        this.propertyDefinitions = propertyDefinitions;
         this.definition = definition;
     }
 

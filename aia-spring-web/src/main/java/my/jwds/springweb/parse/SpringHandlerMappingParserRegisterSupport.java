@@ -22,7 +22,7 @@ public class SpringHandlerMappingParserRegisterSupport implements SpringHandlerM
 
 
     public SpringHandlerMappingParserRegisterSupport(){
-        parsers.add(new RequestMappingHandlerMappingParser());
+
     }
 
     /**

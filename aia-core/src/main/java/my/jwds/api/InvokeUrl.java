@@ -2,13 +2,14 @@ package my.jwds.api;
 
 import my.jwds.model.ModelProperty;
 
+/**
+ * 执行url，包含 请求方法和请求路径
+ */
 public class InvokeUrl extends InvokeDefinition {
 
     private String method;
 
     private String url;
-
-
 
 
     public String getMethod() {
@@ -27,4 +28,12 @@ public class InvokeUrl extends InvokeDefinition {
         this.url = url;
     }
 
+    public InvokeUrl(String definition, String method, String url) {
+        super(definition);
+        this.method = method;
+        this.url = url;
+    }
+
+    public InvokeUrl() {
+    }
 }

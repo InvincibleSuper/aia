@@ -1,11 +1,10 @@
-package my.jwds.definition.resolver;
+package my.jwds.api.definition.resolver;
 
 import com.sun.javadoc.*;
-import my.jwds.DocTest;
-import my.jwds.definition.AiaDefinitionException;
-import my.jwds.definition.ClassDefinition;
-import my.jwds.definition.MethodDefinition;
-import my.jwds.definition.PropertyDefinition;
+import my.jwds.api.definition.AiaDefinitionException;
+import my.jwds.api.definition.ClassDefinition;
+import my.jwds.api.definition.MethodDefinition;
+import my.jwds.api.definition.FieldDefinition;
 import my.jwds.utils.ClassUtil;
 
 import java.io.File;
@@ -48,7 +47,8 @@ public class JavadocDefinitionResolver extends AbstractDefinitionResolver{
     @Override
     protected void doInitDefinition(Class clz) {
         String fullyName = clz.getTypeName();
-        String javaPath = srcPath+"/"+fullyName.substring(0,fullyName.indexOf("$")).replace('.','/')+".java";
+        int innerClassIndex = fullyName.indexOf("$");
+        String javaPath = srcPath+"/"+fullyName.substring(0,innerClassIndex==-1?fullyName.length():innerClassIndex).replace('.','/')+".java";
         File file = new File(javaPath);
         ClassDefinition classDefinition = new ClassDefinition();
         classDefinition.setClz(clz);
@@ -64,7 +64,7 @@ public class JavadocDefinitionResolver extends AbstractDefinitionResolver{
     }
 
     private void resolveNowAndInnerClassDefinition(Class now,ClassDoc classDoc){
-        Map<Field,PropertyDefinition> propertyDefinitionMap = getNowAndSuperPropertyDefinition(now,classDoc);
+        Map<Field, FieldDefinition> propertyDefinitionMap = getNowAndSuperPropertyDefinition(now,classDoc);
         Map<Method,MethodDefinition> methodDefinitionMap = getNowAndSuperMethodDefinition(now,classDoc);
 
         ClassDefinition classDefinition = new ClassDefinition(now,methodDefinitionMap,propertyDefinitionMap,classDoc.commentText());
@@ -83,23 +83,23 @@ public class JavadocDefinitionResolver extends AbstractDefinitionResolver{
 
 
 
-    private Map<Field,PropertyDefinition> getNowAndSuperPropertyDefinition(Class now,ClassDoc classDoc){
-        Map<String, PropertyDefinition> propertyDefinitionMap = new LinkedHashMap<>();
+    private Map<Field, FieldDefinition> getNowAndSuperPropertyDefinition(Class now, ClassDoc classDoc){
+        Map<String, FieldDefinition> propertyDefinitionMap = new LinkedHashMap<>();
         while(now != Object.class){
             for (FieldDoc fieldDoc : classDoc.fields(false)) {
                 try {
                     if (propertyDefinitionMap.containsKey(fieldDoc.name()))continue;
                     Field field = now.getDeclaredField(fieldDoc.name());
                     if (!Modifier.isStatic(field.getModifiers()) && !Modifier.isFinal(field.getModifiers())){
-                        propertyDefinitionMap.put(fieldDoc.name(),new PropertyDefinition(field,fieldDoc.commentText()));
+                        propertyDefinitionMap.put(fieldDoc.name(),new FieldDefinition(field,fieldDoc.commentText()));
                     }
                 } catch (NoSuchFieldException e) { }
             }
             now = now.getSuperclass();
             classDoc = classDoc.superclass();
         }
-        Map<Field,PropertyDefinition> res = new LinkedHashMap<>();
-        for (PropertyDefinition value : propertyDefinitionMap.values()) {
+        Map<Field, FieldDefinition> res = new LinkedHashMap<>();
+        for (FieldDefinition value : propertyDefinitionMap.values()) {
             res.put(value.getField(),value);
         }
         return res;

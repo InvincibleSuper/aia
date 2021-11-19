@@ -2,13 +2,25 @@ package my.jwds.api;
 
 import my.jwds.model.ModelProperty;
 
-public class InvokeParam  {
+/**
+ * 执行参数
+ */
+public class InvokeParam extends InvokeDefinition  {
 
-
+    /**
+     * 类别
+     */
     private String contentType;
 
-
+    /**
+     * 执行参数的模型
+     */
     private ModelProperty model;
+
+    /**
+     * 前缀
+     */
+    private String prefix;
 
 
     public String getContentType() {
@@ -25,5 +37,28 @@ public class InvokeParam  {
 
     public void setModel(ModelProperty model) {
         this.model = model;
+    }
+
+    public String getPrefix() {
+        return prefix;
+    }
+
+    public void setPrefix(String prefix) {
+        this.prefix = prefix;
+    }
+
+    public InvokeParam(String definition, String contentType, ModelProperty model, String prefix) {
+        super(definition);
+        this.contentType = contentType;
+        this.model = model;
+        this.prefix = prefix;
+    }
+
+    public InvokeParam() {
+
+    }
+
+    public InvokeParam clone(){
+        return new InvokeParam(getDefinition(),getContentType(),getModel().clone(),getPrefix());
     }
 }

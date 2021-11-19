@@ -1,4 +1,4 @@
-package my.jwds.definition;
+package my.jwds.api.definition;
 
 import java.lang.reflect.Method;
 

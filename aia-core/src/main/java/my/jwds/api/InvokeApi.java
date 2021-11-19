@@ -1,9 +1,12 @@
 package my.jwds.api;
 
-import my.jwds.model.ModelProperty;
+
 
 import java.util.Map;
 
+/**
+ * 执行api，把url param header 结合到此类
+ */
 public class InvokeApi extends InvokeDefinition{
 
     private InvokeUrl url;
@@ -17,27 +20,6 @@ public class InvokeApi extends InvokeDefinition{
 
     private String group;
 
-
-    private ModelProperty returnModel;
-
-
-    private String returnType;
-
-    public ModelProperty getReturnModel() {
-        return returnModel;
-    }
-
-    public void setReturnModel(ModelProperty returnModel) {
-        this.returnModel = returnModel;
-    }
-
-    public String getReturnType() {
-        return returnType;
-    }
-
-    public void setReturnType(String returnType) {
-        this.returnType = returnType;
-    }
 
     public Map<String, String> getHeaders() {
         return headers;
@@ -75,4 +57,15 @@ public class InvokeApi extends InvokeDefinition{
     }
 
 
+    public InvokeApi(String definition, InvokeUrl url, Map<String, InvokeParam> params, Map<String, String> headers, String group) {
+        super(definition);
+        this.url = url;
+        this.params = params;
+        this.headers = headers;
+        this.group = group;
+    }
+
+    public InvokeApi() {
+
+    }
 }

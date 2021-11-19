@@ -1,9 +1,9 @@
-package my.jwds.definition.resolver;
+package my.jwds.api.definition.resolver;
 
 
-import my.jwds.definition.ClassDefinition;
-import my.jwds.definition.MethodDefinition;
-import my.jwds.definition.PropertyDefinition;
+import my.jwds.api.definition.ClassDefinition;
+import my.jwds.api.definition.MethodDefinition;
+import my.jwds.api.definition.FieldDefinition;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -21,7 +21,7 @@ public class PriorityDefinitionResolver extends AbstractDefinitionResolver{
     protected void doInitDefinition(Class clz) {
         int index = resolvers.length -1;
         ClassDefinition now = resolvers[index--].resolveClass(clz);
-        for (; index < 0; index--) {
+        for (; index >= 0; index--) {
             ClassDefinition next = resolvers[index].resolveClass(clz);
             if (next.getDefinition() == ""){
                 next.setDefinition(now.getDefinition());
@@ -42,9 +42,9 @@ public class PriorityDefinitionResolver extends AbstractDefinitionResolver{
                     }
                 }
             }
-            Map<Field, PropertyDefinition> nextPropertyDefinition = next.getPropertyDefinitions();
-            for (PropertyDefinition p1 : now.getPropertyDefinitions().values()) {
-                PropertyDefinition pd = nextPropertyDefinition.get(p1.getField());
+            Map<Field, FieldDefinition> nextPropertyDefinition = next.getFieldDefinitions();
+            for (FieldDefinition p1 : now.getFieldDefinitions().values()) {
+                FieldDefinition pd = nextPropertyDefinition.get(p1.getField());
                 if (pd == null || pd.getDefinition() == ""){
                     nextPropertyDefinition.put(p1.getField(),p1);
                 }

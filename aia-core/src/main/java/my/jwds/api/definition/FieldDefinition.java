@@ -1,8 +1,8 @@
-package my.jwds.definition;
+package my.jwds.api.definition;
 
 import java.lang.reflect.Field;
 
-public class PropertyDefinition {
+public class FieldDefinition {
 
 
     private Field field;
@@ -26,11 +26,11 @@ public class PropertyDefinition {
         this.definition = definition;
     }
 
-    public PropertyDefinition(Field field, String definition) {
+    public FieldDefinition(Field field, String definition) {
         this.field = field;
         this.definition = definition;
     }
 
-    public PropertyDefinition() {
+    public FieldDefinition() {
     }
 }

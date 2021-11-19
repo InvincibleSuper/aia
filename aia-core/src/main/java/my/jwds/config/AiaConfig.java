@@ -24,4 +24,12 @@ public class AiaConfig {
     public void setSrcPath(String srcPath) {
         this.srcPath = srcPath;
     }
+
+    public AiaConfig(boolean persist, String srcPath) {
+        this.persist = persist;
+        this.srcPath = srcPath;
+    }
+
+    public AiaConfig() {
+    }
 }

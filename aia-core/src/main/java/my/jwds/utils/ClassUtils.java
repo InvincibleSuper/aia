@@ -1,14 +1,24 @@
 package my.jwds.utils;
 
-public class ClassUtil {
+public class ClassUtils {
 
+
+    /**
+     * 使用此类的类加载器加载传入的类完全限定名
+     * @param fullyName 类完全限定名
+     * @return
+     * @throws ClassNotFoundException
+     */
     public static Class loadClass(String fullyName) throws ClassNotFoundException {
-        return ClassUtil.class.getClassLoader().loadClass(fullyName);
+        return ClassUtils.class.getClassLoader().loadClass(fullyName);
     }
 
-
+    /**
+     * 获取类文件的根路径
+     * @return
+     */
     public static String classesPath(){
-        Class clz = ClassUtil.class;
+        Class clz = ClassUtils.class;
         String path = clz.getResource("/").getPath();
         return path;
     }

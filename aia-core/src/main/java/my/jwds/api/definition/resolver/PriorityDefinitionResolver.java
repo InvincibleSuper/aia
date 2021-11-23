@@ -7,22 +7,45 @@ import my.jwds.api.definition.FieldDefinition;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class PriorityDefinitionResolver extends AbstractDefinitionResolver{
 
-    private DefinitionResolver [] resolvers;
+    private List<DefinitionResolver> resolvers = new ArrayList<>();
 
-    public PriorityDefinitionResolver(DefinitionResolver... resolvers) {
-        this.resolvers = resolvers;
+
+    public PriorityDefinitionResolver() {
+    }
+
+    public PriorityDefinitionResolver(List<DefinitionResolver> resolvers) {
+        for (DefinitionResolver resolver : resolvers) {
+            addResolver(resolver);
+        }
+    }
+
+    public void addResolver(DefinitionResolver resolver){
+        if (resolver instanceof PriorityDefinitionResolver){
+            resolvers.addAll(((PriorityDefinitionResolver)resolvers).getResolvers());
+        }else{
+            resolvers.add(resolver);
+        }
+    }
+
+    public List<DefinitionResolver> getResolvers(){
+        return resolvers;
     }
 
     @Override
     protected void doInitDefinition(Class clz) {
-        int index = resolvers.length -1;
-        ClassDefinition now = resolvers[index--].resolveClass(clz);
+        if (resolvers.isEmpty()){
+            return;
+        }
+        int index = resolvers.size() -1;
+        ClassDefinition now = resolvers.get(index--).resolveClass(clz);
         for (; index >= 0; index--) {
-            ClassDefinition next = resolvers[index].resolveClass(clz);
+            ClassDefinition next = resolvers.get(index--).resolveClass(clz);
             if (next.getDefinition() == ""){
                 next.setDefinition(now.getDefinition());
             }

@@ -23,15 +23,13 @@ public class DefaultAiaApiManager implements AiaApiManager {
      * @param api
      */
     @Override
-    public void registerApi(InvokeApi api) {
-        synchronized (cache){
-            List<InvokeApi> apis = cache.get(api.getGroup());
-            if (apis == null){
-                apis = new ArrayList<>();
-                cache.put(api.getGroup(),apis);
-            }
-            apis.add(api);
+    public void addApi(InvokeApi api) {
+        List<InvokeApi> apis = cache.get(api.getGroup());
+        if (apis == null){
+            apis = new ArrayList<>();
+            cache.put(api.getGroup(),apis);
         }
+        apis.add(api);
     }
 
     /**
@@ -41,9 +39,27 @@ public class DefaultAiaApiManager implements AiaApiManager {
      * @param apis
      */
     @Override
-    public void registerGroupApi(String group, List<InvokeApi> apis) {
+    public void addGroupApi(String group, List<InvokeApi> apis) {
         cache.put(group,apis);
     }
+
+    /**
+     * 注册所有api
+     *
+     * @param all 所有api
+     */
+    @Override
+    public void addAll(List<InvokeApi> all) {
+        for (InvokeApi api : all) {
+            List<InvokeApi> apis = cache.get(api.getGroup());
+            if (apis == null){
+                apis = new ArrayList<>();
+                cache.put(api.getGroup(),apis);
+            }
+            apis.add(api);
+        }
+    }
+
 
     /**
      * 注册api
@@ -51,11 +67,12 @@ public class DefaultAiaApiManager implements AiaApiManager {
      * @param all
      */
     @Override
-    public void registerAll(Map<String, List<InvokeApi>> all) {
+    public void addAll(Map<String, List<InvokeApi>> all) {
         for (Map.Entry<String, List<InvokeApi>> entry : all.entrySet()) {
             cache.put(entry.getKey(),entry.getValue());
         }
     }
+
 
     /**
      * 获取组

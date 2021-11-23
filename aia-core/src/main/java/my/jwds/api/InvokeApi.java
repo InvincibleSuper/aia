@@ -2,6 +2,7 @@ package my.jwds.api;
 
 
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -12,7 +13,7 @@ public class InvokeApi extends InvokeDefinition{
     private InvokeUrl url;
 
 
-    private Map<String,InvokeParam> params;
+    private List<InvokeParam> params;
 
 
     private Map<String,String> headers;
@@ -47,17 +48,15 @@ public class InvokeApi extends InvokeDefinition{
         return this;
     }
 
-    public Map<String, InvokeParam> getParams() {
+    public List<InvokeParam> getParams() {
         return params;
     }
 
-    public InvokeApi setParams(Map<String, InvokeParam> params) {
+    public void setParams(List<InvokeParam> params) {
         this.params = params;
-        return this;
     }
 
-
-    public InvokeApi(String definition, InvokeUrl url, Map<String, InvokeParam> params, Map<String, String> headers, String group) {
+    public InvokeApi(String definition, InvokeUrl url, List<InvokeParam> params, Map<String, String> headers, String group) {
         super(definition);
         this.url = url;
         this.params = params;

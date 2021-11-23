@@ -2,26 +2,29 @@ package my.jwds.core;
 
 import java.util.Map;
 
+/**
+ * 模板管理器
+ */
 public interface AiaTemplateManager {
 
     /**
      * 添加模板
      * @param template 模板
      */
-    void add(AiaTemplate template);
+    void addTemplate(AiaTemplate template);
 
     /**
      * 删除模板
      * @param template 模板
      */
-    void remove(AiaTemplate template);
+    void removeTemplate(AiaTemplate template);
 
     /**
      * 修改模板
      * @param name 名称
      * @param template 模板
      */
-    void update(String name,AiaTemplate template);
+    void updateTemplate(String name,AiaTemplate template);
 
     /**
      * 全部模板

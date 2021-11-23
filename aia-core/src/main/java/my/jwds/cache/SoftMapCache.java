@@ -2,6 +2,7 @@ package my.jwds.cache;
 
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.SoftReference;
+import java.lang.ref.WeakReference;
 import java.math.BigInteger;
 import java.util.Collection;
 import java.util.LinkedHashMap;
@@ -9,11 +10,17 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class MapCache<K,V> implements Cache<K,V>{
+/**
+ * 软引用Map缓存，内存不足抛出异常
+ * 此类是为了扫描加载Api时内存不足对用户做出提醒
+ * @param <K>
+ * @param <V>
+ */
+public class SoftMapCache<K,V> implements Cache<K,V>{
 
     private SoftReference<Map> softReference;
     private ReferenceQueue<Map> referenceQueue;
-    public MapCache() {
+    public SoftMapCache() {
         referenceQueue = new ReferenceQueue<>();
         softReference = new SoftReference<>(new ConcurrentHashMap<>(),referenceQueue);
     }

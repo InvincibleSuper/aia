@@ -15,7 +15,7 @@ public class NoParserHandlerMappingParser extends AbstractHandlerMappingParser{
      * @return 支持的处理类
      */
     @Override
-    public Class supportClass() {
+    protected Class supportClass() {
         return HandlerMapping.class;
     }
 

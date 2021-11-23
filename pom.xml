@@ -10,9 +10,10 @@
     <version>1.0-SNAPSHOT</version>
     <modules>
         <module>aia-core</module>
-        <module>aia-spring-web-starter</module>
+        <module>aia-spring-boot-web-starter</module>
         <module>aia-spring-web</module>
         <module>aia-samples</module>
+        <module>aia-page</module>
     </modules>
 
     <properties>
@@ -38,7 +39,7 @@
 
             <dependency>
                 <groupId>my.jwds</groupId>
-                <artifactId>aia-spring-web-starter</artifactId>
+                <artifactId>aia-spring-boot-web-starter</artifactId>
                 <version>${aia.version}</version>
             </dependency>
             <dependency>

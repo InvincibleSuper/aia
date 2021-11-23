@@ -89,9 +89,9 @@ public abstract class AbstractDefinitionResolver implements DefinitionResolver{
      * @return 字段注释
      */
     @Override
-    public String resolveFieldDefinition( Field field) {
+    public String resolveFieldDefinition(Field field) {
         FieldDefinition fieldDefinition = resolveClass(field.getDeclaringClass()).getFieldDefinitions().get(field);
-        return fieldDefinition == null ? null:fieldDefinition.getDefinition();
+        return fieldDefinition == null ? null : fieldDefinition.getDefinition();
     }
 
     /**
@@ -104,7 +104,6 @@ public abstract class AbstractDefinitionResolver implements DefinitionResolver{
     public String resolveMethodDefinition( Method method) {
         MethodDefinition methodDefinition = resolveClass(method.getDeclaringClass()).getMethodDefinitions().get(method);
         return methodDefinition == null ? null:methodDefinition.getDefinition();
-
     }
 
     /**

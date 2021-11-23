@@ -23,17 +23,17 @@ public class DefaultAiaTemplateManager implements AiaTemplateManager{
     }
 
     @Override
-    public void add(AiaTemplate template) {
+    public void addTemplate(AiaTemplate template) {
         ensureContent(template.getGroup()).put(template.getName(),template);
     }
 
     @Override
-    public void remove(AiaTemplate template) {
+    public void removeTemplate(AiaTemplate template) {
         ensureContent(template.getGroup()).remove(template.getName(),template);
     }
 
     @Override
-    public void update(String name, AiaTemplate template) {
+    public void updateTemplate(String name, AiaTemplate template) {
         ensureContent(template.getGroup()).put(template.getName(),template);
     }
 

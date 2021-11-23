@@ -67,7 +67,7 @@ public class AiaManager implements AiaTemplateManager, AiaPluginManager, AiaApiM
      * @param api api
      */
     @Override
-    public void registerApi(InvokeApi api) {
+    public void addApi(InvokeApi api) {
 
     }
 
@@ -78,7 +78,7 @@ public class AiaManager implements AiaTemplateManager, AiaPluginManager, AiaApiM
      * @param apis  api列表
      */
     @Override
-    public void registerGroupApi(String group, List<InvokeApi> apis) {
+    public void addGroupApi(String group, List<InvokeApi> apis) {
 
     }
 
@@ -88,7 +88,17 @@ public class AiaManager implements AiaTemplateManager, AiaPluginManager, AiaApiM
      * @param all 所有api
      */
     @Override
-    public void registerAll(Map<String, List<InvokeApi>> all) {
+    public void addAll(List<InvokeApi> all) {
+
+    }
+
+    /**
+     * 注册所有api
+     *
+     * @param all 所有api
+     */
+    @Override
+    public void addAll(Map<String, List<InvokeApi>> all) {
 
     }
 
@@ -129,7 +139,7 @@ public class AiaManager implements AiaTemplateManager, AiaPluginManager, AiaApiM
      * @param template 模板
      */
     @Override
-    public void add(AiaTemplate template) {
+    public void addTemplate(AiaTemplate template) {
 
     }
 
@@ -139,7 +149,7 @@ public class AiaManager implements AiaTemplateManager, AiaPluginManager, AiaApiM
      * @param template 模板
      */
     @Override
-    public void remove(AiaTemplate template) {
+    public void removeTemplate(AiaTemplate template) {
 
     }
 
@@ -150,7 +160,7 @@ public class AiaManager implements AiaTemplateManager, AiaPluginManager, AiaApiM
      * @param template 模板
      */
     @Override
-    public void update(String name, AiaTemplate template) {
+    public void updateTemplate(String name, AiaTemplate template) {
 
     }
 
@@ -181,7 +191,7 @@ public class AiaManager implements AiaTemplateManager, AiaPluginManager, AiaApiM
      * @param plugin
      */
     @Override
-    public void registerPlugin(AiaPlugin plugin) {
+    public void addPlugin(AiaPlugin plugin) {
 
     }
 

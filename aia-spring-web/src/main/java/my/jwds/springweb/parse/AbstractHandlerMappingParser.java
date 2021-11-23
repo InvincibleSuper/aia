@@ -21,6 +21,17 @@ public abstract class AbstractHandlerMappingParser implements SpringHandlerMappi
     }
 
 
+
+
+
+    /**
+     * 返回支持处理类
+     * @return 支持的处理类
+     */
+    protected abstract Class supportClass();
+
+
+
     /**
      * 解析 HandlerMapping
      *

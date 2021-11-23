@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.*;
 
-public class DefaultModelResolver implements ModelResolver<ModelPropertyResolveInfo>{
+public class DefaultModelResolver implements ModelResolver<Type>{
 
     private static final Map<Class,Object> special = new HashMap<>();
     private Map<Type,Model> cache = new HashMap<>();
@@ -57,7 +57,15 @@ public class DefaultModelResolver implements ModelResolver<ModelPropertyResolveI
     }
 
     @Override
-    public ModelProperty resolve(ModelPropertyResolveInfo resolveInfo) {
+    public ModelProperty resolve(Type type) {
+        ModelPropertyResolveInfo resolveInfo;
+        if (type instanceof ModelPropertyResolveInfo){
+            resolveInfo = (ModelPropertyResolveInfo) type;
+        }else{
+            resolveInfo = new ModelPropertyResolveInfo();
+            resolveInfo.setType(type);
+            resolveInfo.setName(type.getTypeName());
+        }
         Type origin = resolveInfo.getOrigin() == null ? resolveInfo.getType():resolveInfo.getOrigin();
         GenericDeclaration declaration = resolveInfo.getDefinition() == null ? getRawClass(resolveInfo.getType()) : resolveInfo.getDefinition();
         return resolveProperty(resolveInfo.getType(),resolveInfo.getName(),origin,declaration,new HashSet());

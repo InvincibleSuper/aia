@@ -19,7 +19,7 @@ public class DefaultAiaPluginManager implements AiaPluginManager {
     }
 
     @Override
-    public void registerPlugin(AiaPlugin plugin) {
+    public void addPlugin(AiaPlugin plugin) {
         cache.put(plugin.getName(),plugin);
     }
 

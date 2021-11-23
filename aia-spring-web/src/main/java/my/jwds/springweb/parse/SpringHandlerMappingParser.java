@@ -12,11 +12,6 @@ public interface SpringHandlerMappingParser {
      */
     boolean support(HandlerMapping handlerMapping);
 
-    /**
-     * 返回支持处理类
-     * @return 支持的处理类
-     */
-    Class supportClass();
 
 
 

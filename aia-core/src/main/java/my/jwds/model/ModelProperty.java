@@ -10,7 +10,6 @@ public class ModelProperty {
      * 名称
      */
     private String name;
-
     /**
      * 类型
      */

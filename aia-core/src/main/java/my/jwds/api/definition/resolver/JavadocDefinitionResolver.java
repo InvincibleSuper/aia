@@ -5,7 +5,7 @@ import my.jwds.api.definition.AiaDefinitionException;
 import my.jwds.api.definition.ClassDefinition;
 import my.jwds.api.definition.MethodDefinition;
 import my.jwds.api.definition.FieldDefinition;
-import my.jwds.utils.ClassUtil;
+import my.jwds.utils.ClassUtils;
 
 import java.io.File;
 import java.lang.reflect.Field;
@@ -32,7 +32,7 @@ public class JavadocDefinitionResolver extends AbstractDefinitionResolver{
         public static boolean start(RootDoc root) {
             ClassDoc doc = root.classes()[0];
             try {
-                JavadocDefinitionResolver.docs.put(ClassUtil.loadClass(doc.toString()),doc);
+                JavadocDefinitionResolver.docs.put(ClassUtils.loadClass(doc.toString()),doc);
             } catch (ClassNotFoundException e) {
                 throw new AiaDefinitionException("不能找到类"+doc);
             }
@@ -50,8 +50,6 @@ public class JavadocDefinitionResolver extends AbstractDefinitionResolver{
         int innerClassIndex = fullyName.indexOf("$");
         String javaPath = srcPath+"/"+fullyName.substring(0,innerClassIndex==-1?fullyName.length():innerClassIndex).replace('.','/')+".java";
         File file = new File(javaPath);
-        ClassDefinition classDefinition = new ClassDefinition();
-        classDefinition.setClz(clz);
         if (file.exists()){
             com.sun.tools.javadoc.Main.execute(new String[] {
                     "-doclet",
@@ -60,6 +58,9 @@ public class JavadocDefinitionResolver extends AbstractDefinitionResolver{
                     javaPath});
             ClassDoc classDoc =  docs.get(clz);
             resolveNowAndInnerClassDefinition(clz,classDoc);
+        }else{
+            ClassDefinition classDefinition = new ClassDefinition(clz,new HashMap<>(),new HashMap<>(),null);
+            cache.put(clz,classDefinition);
         }
     }
 
@@ -73,7 +74,7 @@ public class JavadocDefinitionResolver extends AbstractDefinitionResolver{
         String packageName = now.getPackage().getName();
         for (ClassDoc doc : inners) {
             try {
-                Class clz = ClassUtil.loadClass(packageName + "."+ doc.typeName().replace('.','$'));
+                Class clz = ClassUtils.loadClass(packageName + "."+ doc.typeName().replace('.','$'));
                 resolveNowAndInnerClassDefinition(clz,doc);
             } catch (ClassNotFoundException e) {
 
@@ -116,7 +117,7 @@ public class JavadocDefinitionResolver extends AbstractDefinitionResolver{
                     if (methodDefinitionMap.containsKey(key))continue;
                     Class [] methodParameter = new Class[methodDoc.parameters().length];
                     for (int i = 0; i < methodDoc.parameters().length; i++) {
-                        methodParameter[i] = ClassUtil.loadClass(methodDoc.parameters()[i].type().asParameterizedType().toString());
+                        methodParameter[i] = ClassUtils.loadClass(methodDoc.parameters()[i].type().toString());
                     }
                     Method method = now.getDeclaredMethod(methodDoc.name(),methodParameter);
                     MethodDefinition methodDefinition = new MethodDefinition(method,methodDoc.commentText());

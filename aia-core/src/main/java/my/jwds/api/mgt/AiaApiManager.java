@@ -6,6 +6,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * api管理器
+ */
 public interface AiaApiManager {
 
 
@@ -13,20 +16,30 @@ public interface AiaApiManager {
      * 注册api
      * @param api api
      */
-    void registerApi(InvokeApi api);
+    void addApi(InvokeApi api);
 
     /**
      * 根据组注册api列表
      * @param group 组
      * @param apis api列表
      */
-    void registerGroupApi(String group,List<InvokeApi> apis);
+    void addGroupApi(String group,List<InvokeApi> apis);
+
 
     /**
      * 注册所有api
      * @param all 所有api
      */
-    void registerAll(Map<String,List<InvokeApi>> all);
+    void addAll(List<InvokeApi> all);
+
+
+    /**
+     * 注册所有api
+     * @param all 所有api
+     */
+    void addAll(Map<String,List<InvokeApi>> all);
+
+
 
     /**
      * 获取组

@@ -1,11 +1,9 @@
 package my.jwds.cache;
 
-
 /**
- * 软引用
+ * 默认的缓存管理器，返回默认缓存
  */
-public class SoftCacheManager extends AbstractCacheManager{
-
+public class DefaultCacheManager extends AbstractCacheManager{
 
     /**
      * 创建一个缓存实例
@@ -14,6 +12,6 @@ public class SoftCacheManager extends AbstractCacheManager{
      */
     @Override
     protected Cache createCacheInstance() {
-        return new SoftMapCache();
+        return new DefaultCache();
     }
 }

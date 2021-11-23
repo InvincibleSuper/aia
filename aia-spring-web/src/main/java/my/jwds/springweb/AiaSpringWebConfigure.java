@@ -3,7 +3,7 @@ package my.jwds.springweb;
 import my.jwds.api.mgt.AiaApiManager;
 import my.jwds.api.mgt.DefaultAiaApiManager;
 import my.jwds.cache.CacheManager;
-import my.jwds.cache.SoftCacheManager;
+import my.jwds.cache.DefaultCacheManager;
 import my.jwds.config.AiaConfig;
 import my.jwds.core.AiaApiScanner;
 import my.jwds.core.AiaManager;
@@ -12,36 +12,32 @@ import my.jwds.core.DefaultAiaTemplateManager;
 import my.jwds.api.definition.resolver.DefinitionResolver;
 import my.jwds.api.definition.resolver.JavadocDefinitionResolver;
 import my.jwds.api.definition.resolver.PriorityDefinitionResolver;
-import my.jwds.model.ModelProperty;
 import my.jwds.model.resolver.DefaultModelResolver;
 import my.jwds.model.resolver.ModelResolver;
 import my.jwds.plugin.mgt.AiaPluginManager;
 import my.jwds.plugin.mgt.DefaultAiaPluginManager;
-import my.jwds.springweb.parse.SpringHandlerMappingParser;
-import my.jwds.springweb.parse.method.HandlerMethodPropertiesResolver;
-import my.jwds.utils.ClassUtil;
-import org.springframework.beans.factory.annotation.Autowired;
+import my.jwds.springweb.parse.NoParserHandlerMappingParser;
+import my.jwds.springweb.parse.RequestMappingHandlerMappingParser;
+import my.jwds.springweb.parse.SpringHandlerMappingParserComposite;
+import my.jwds.springweb.parse.method.*;
+import my.jwds.utils.ClassUtils;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
+import java.util.Collections;
 import java.util.List;
 
-@Configuration
+
 public class AiaSpringWebConfigure {
 
 
-
     public AiaConfig aiaConfig(){
-        AiaConfig config = new AiaConfig(true,ClassUtil.originPath());
-        return config;
+        return new AiaConfig(true, ClassUtils.originPath());
     }
 
 
     public CacheManager cacheManager(){
-        return new SoftCacheManager();
+        return new DefaultCacheManager();
     }
 
 
@@ -57,42 +53,58 @@ public class AiaSpringWebConfigure {
         return new DefaultAiaApiManager(cacheManager);
     }
 
-    public AiaManager aiaManager(CacheManager cacheManager){
-        AiaTemplateManager templateManager = aiaTemplateManager(cacheManager);
-        AiaPluginManager pluginManager = aiaPluginManager(cacheManager);
-        AiaApiManager apiManager =  aiaApiManager(cacheManager);
-        AiaManager aiaManager = new AiaManager(templateManager,pluginManager,apiManager);
-        return aiaManager;
+
+    public AiaManager aiaManager(AiaTemplateManager templateManager,AiaPluginManager pluginManager,AiaApiManager apiManager){
+        return new AiaManager(templateManager,pluginManager,apiManager);
     }
 
 
-    public DefinitionResolver javadocDefinitionResolver(AiaConfig aiaConfig){
-        return new JavadocDefinitionResolver(aiaConfig.getSrcPath());
-    }
 
 
-    public DefinitionResolver priorityDefinitionResolver(DefinitionResolver... definitionResolvers){
+    public PriorityDefinitionResolver priorityDefinitionResolver(List<DefinitionResolver> definitionResolvers){
         return new PriorityDefinitionResolver(definitionResolvers);
     }
 
 
-    public ModelResolver resolver(DefinitionResolver priorityDefinitionResolver){
+    public ModelResolver defaultModelResolver(DefinitionResolver priorityDefinitionResolver){
         return new DefaultModelResolver(priorityDefinitionResolver);
     }
 
 
-    public HandlerMethodPropertiesResolver handlerMethodPropertiesResolver(DefinitionResolver definitionResolver, ModelProperty modelProperty){
-        return null;
+    public HandlerMethodArgumentResolverRegister handlerMethodArgumentResolverRegister(DefinitionResolver definitionResolver, ModelResolver modelResolver){
+        HandlerMethodArgumentResolverRegister resolverRegister = new DefaultHandlerMethodArgumentResolverRegister();
+        HandlerMethodArgumentResolver ignore = new IgnoreHandlerMethodArgumentResolver();
+        HandlerMethodArgumentResolver file = new MultipartFileHandlerMethodArgumentResolver(definitionResolver,modelResolver);
+        HandlerMethodArgumentResolver param = new ParamHandlerMethodArgumentResolver(definitionResolver,modelResolver);
+        HandlerMethodArgumentResolver requestBody = new RequestBodyHandlerMethodArgumentResolver(definitionResolver,modelResolver);
+        HandlerMethodArgumentResolver requestParam = new RequestParamHandlerMethodArgumentResolver(definitionResolver,modelResolver);
+        resolverRegister.registerResolver(ignore);
+        resolverRegister.registerResolver(file);
+        resolverRegister.registerResolver(param);
+        resolverRegister.registerResolver(requestBody);
+        resolverRegister.registerResolver(requestParam);
+        return resolverRegister;
     }
 
-    public SpringHandlerMappingParser requestMappingHandlerMappingParser(DefinitionResolver definitionResolver, HandlerMethodPropertiesResolver handlerMethodPropertiesResolver){
-        return null;
+    public SpringHandlerMappingParserComposite parserComposite(DefinitionResolver definitionResolver, HandlerMethodArgumentResolverRegister argumentResolverRegister){
+        SpringHandlerMappingParserComposite parserComposite = new SpringHandlerMappingParserComposite();
+        parserComposite.addParser(new RequestMappingHandlerMappingParser(definitionResolver,argumentResolverRegister));
+        parserComposite.setDefaultParser(new NoParserHandlerMappingParser());
+        return parserComposite;
     }
 
 
-    public AiaApiScanner aiaApiScanner(){
-        SpringWebAiaScanner apiScanner = new SpringWebAiaScanner();
-        return apiScanner;
+    @Bean
+    public AiaApiScanner aiaApiScanner(ApplicationContext context){
+        AiaConfig aiaConfig = aiaConfig();
+        CacheManager cacheManager = cacheManager();
+        AiaManager aiaManager = aiaManager(aiaTemplateManager(cacheManager),aiaPluginManager(cacheManager),aiaApiManager(cacheManager));
+        JavadocDefinitionResolver javadocDefinitionResolver = new JavadocDefinitionResolver(aiaConfig.getSrcPath());
+        DefinitionResolver definitionResolver = priorityDefinitionResolver(Collections.singletonList(javadocDefinitionResolver));
+        ModelResolver modelResolver = defaultModelResolver(definitionResolver);
+        HandlerMethodArgumentResolverRegister argumentResolverRegister = handlerMethodArgumentResolverRegister(definitionResolver,modelResolver);
+        SpringHandlerMappingParserComposite parserComposite = parserComposite(definitionResolver,argumentResolverRegister);
+        return new SpringWebAiaScanner(context,parserComposite,aiaManager);
     }
 
 

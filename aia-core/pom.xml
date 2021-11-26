@@ -21,7 +21,7 @@
             <artifactId>tools</artifactId>
             <scope>system</scope>
             <version>1.5</version>
-            <systemPath>${java.home}/../lib/tools.jar</systemPath>
+            <systemPath>${basedir}/../lib/tools.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>junit</groupId>

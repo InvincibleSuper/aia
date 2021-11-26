@@ -1,7 +1,7 @@
 package my.jwds.springweb.parse.method;
 
-import my.jwds.api.definition.resolver.DefinitionResolver;
-import my.jwds.model.resolver.ModelResolver;
+import my.jwds.core.api.definition.resolver.DefinitionResolver;
+import my.jwds.core.model.resolver.ModelResolver;
 import org.springframework.core.MethodParameter;
 import org.springframework.web.bind.annotation.RequestParam;
 

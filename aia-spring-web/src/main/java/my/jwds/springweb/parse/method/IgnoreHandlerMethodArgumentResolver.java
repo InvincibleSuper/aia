@@ -1,10 +1,9 @@
 package my.jwds.springweb.parse.method;
 
 
-import my.jwds.api.InvokeParam;
+import my.jwds.core.api.InvokeParam;
 import org.springframework.core.MethodParameter;
 import org.springframework.ui.Model;
-import org.springframework.ui.ModelMap;
 
 
 /**

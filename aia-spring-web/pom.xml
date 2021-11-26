@@ -18,6 +18,10 @@
     <dependencies>
         <dependency>
             <groupId>my.jwds</groupId>
+            <artifactId>aia-page-ui</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>my.jwds</groupId>
             <artifactId>aia-core</artifactId>
         </dependency>
 

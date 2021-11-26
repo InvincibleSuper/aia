@@ -13,7 +13,7 @@
         <module>aia-spring-boot-web-starter</module>
         <module>aia-spring-web</module>
         <module>aia-samples</module>
-        <module>aia-page</module>
+        <module>aia-page-ui</module>
     </modules>
 
     <properties>
@@ -30,7 +30,11 @@
                 <artifactId>aia-core</artifactId>
                 <version>${aia.version}</version>
             </dependency>
-
+            <dependency>
+                <groupId>my.jwds</groupId>
+                <artifactId>aia-page-ui</artifactId>
+                <version>${aia.version}</version>
+            </dependency>
             <dependency>
                 <groupId>my.jwds</groupId>
                 <artifactId>aia-spring-web</artifactId>

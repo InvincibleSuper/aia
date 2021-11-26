@@ -3,6 +3,10 @@ package my.jwds.springweb.parse;
 import my.jwds.core.AiaManager;
 import org.springframework.web.servlet.HandlerMapping;
 
+
+/**
+ * spring 处理器映射解析器
+ */
 public interface SpringHandlerMappingParser {
 
     /**

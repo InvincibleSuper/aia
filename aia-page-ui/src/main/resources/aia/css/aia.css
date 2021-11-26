@@ -1,0 +1,80 @@
+
+/* 工作区域100%宽度 */
+html,body,.container-fluid,.row,.sidebar,.nav-sidebar{height:100%;}
+
+
+/* 向下移动内容，因为我们有一个 50px 高的固定导航栏 */
+body {
+    padding-top: 50px;
+    height: 100%;
+}
+
+/*
+ * 顶部导航栏
+ * 隐藏1px的边框
+ */
+.navbar-fixed-top {
+    border: 0;
+}
+
+/*
+ * 侧边栏
+ */
+.sidebar{
+
+}
+.nav-sidebar {
+    margin-right: -21px; /* 20px padding + 1px border */
+    margin-bottom: 20px;
+    margin-left: -20px;
+    border-right: 1px solid #dddddd;
+}
+.nav-sidebar > li > a {
+    padding-right: 20px;
+    padding-left: 20px;
+}
+.nav-sidebar > .active > a,
+.nav-sidebar > .active > a:hover,
+.nav-sidebar > .active > a:focus {
+    color: #fff;
+    box-shadow: 10px 0px 0px 0px red inset;
+    background: #eeeeee;
+}
+
+.nav-sidebar-font{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    font-size: 20px;
+    color: black;
+}
+
+
+/*
+ * 内容模块
+ */
+
+.content-tree-item{
+    display: inline-block;
+    text-align: center;
+    height: 100%;
+}
+
+
+/*
+ * 调用模块
+ */
+.invoke .tab-close{
+    font-size: 10px;
+    position: absolute;
+    right: 0px;
+    font-weight:lighter;
+    display: none;
+    color: black;
+}
+.invoke .tab-close:hover{
+    color: red;
+    cursor:pointer;
+    background: #eeeeee;
+}

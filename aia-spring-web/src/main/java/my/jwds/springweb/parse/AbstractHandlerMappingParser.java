@@ -3,9 +3,13 @@ package my.jwds.springweb.parse;
 import my.jwds.core.AiaManager;
 import org.springframework.web.servlet.HandlerMapping;
 
+
+/**
+ * 抽象的spring处理器映射解析器<br/>
+ * 子类继承{@link AbstractHandlerMappingParser#supportClass()}返回支持的HandleMapping<br/>
+ * 解析委托到子类的{@link AbstractHandlerMappingParser#onParse(AiaManager, HandlerMapping)};
+ */
 public abstract class AbstractHandlerMappingParser implements SpringHandlerMappingParser{
-
-
 
 
 

@@ -8,7 +8,7 @@ import java.util.List;
 
 
 /**
- * spring 方法解析器组合
+ * Spring处理映射解析器组合，使用本身的处理映射解析器列表解析
  */
 public class SpringHandlerMappingParserComposite implements SpringHandlerMappingParser{
 
@@ -19,10 +19,6 @@ public class SpringHandlerMappingParserComposite implements SpringHandlerMapping
      */
     private List<SpringHandlerMappingParser> parsers = new ArrayList<>();
 
-    /**
-     * 没有找到解析器默认返回
-     */
-    private SpringHandlerMappingParser defaultParser = new NoParserHandlerMappingParser();
 
 
 
@@ -36,10 +32,6 @@ public class SpringHandlerMappingParserComposite implements SpringHandlerMapping
 
     public void addParsers(List<SpringHandlerMappingParser> parsers){
         this.parsers.addAll(parsers);
-    }
-
-    public void setDefaultParser(SpringHandlerMappingParser parser){
-        this.defaultParser = parser;
     }
 
 

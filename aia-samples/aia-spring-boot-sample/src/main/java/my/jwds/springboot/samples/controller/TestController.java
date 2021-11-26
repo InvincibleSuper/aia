@@ -3,14 +3,19 @@ package my.jwds.springboot.samples.controller;
 
 import my.jwds.core.AiaApiScanner;
 import my.jwds.springboot.samples.entity.User;
+import my.jwds.springweb.data.AiaController;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
-@RestController
+@Controller
 @RequestMapping("aia")
 public class TestController {
+
+    @Resource
+    private AiaController aiaController;
 
     @GetMapping(path = "/r1",headers = {"user"})
     public int r1(User user){
@@ -21,17 +26,11 @@ public class TestController {
         return 1;
     }
 
-    @GetMapping(path = "/r2/*/{user}")
-    public String r2(@PathVariable(value = "user") String user){
-        return user;
+    @GetMapping(path = "/r2")
+    public String r2(){
+        return "index";
     }
 
 
-    @Resource
-    private AiaApiScanner scanner;
 
-    @GetMapping(path = "/r123")
-    public void scanner(){
-        scanner.startScanner();
-    }
 }

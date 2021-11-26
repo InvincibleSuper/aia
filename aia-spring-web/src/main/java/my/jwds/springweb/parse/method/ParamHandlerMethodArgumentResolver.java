@@ -1,17 +1,12 @@
 package my.jwds.springweb.parse.method;
 
-import my.jwds.api.InvokeContentType;
-import my.jwds.api.InvokeParam;
-import my.jwds.api.definition.resolver.DefinitionResolver;
-import my.jwds.model.ModelProperty;
-import my.jwds.model.ModelPropertyResolveInfo;
-import my.jwds.model.resolver.ModelResolver;
+import my.jwds.core.api.InvokeContentType;
+import my.jwds.core.api.InvokeParam;
+import my.jwds.core.api.definition.resolver.DefinitionResolver;
+import my.jwds.core.model.ModelProperty;
+import my.jwds.core.model.ModelPropertyResolveInfo;
+import my.jwds.core.model.resolver.ModelResolver;
 import org.springframework.core.MethodParameter;
-
-import java.lang.reflect.Method;
-import java.lang.reflect.Parameter;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * 处理方法参数解析类，解析为param类型的参数，默认的兜底解析器

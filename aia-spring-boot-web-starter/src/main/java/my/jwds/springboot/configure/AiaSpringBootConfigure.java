@@ -1,19 +1,19 @@
 package my.jwds.springboot.configure;
 
-import my.jwds.api.definition.resolver.DefinitionResolver;
-import my.jwds.api.definition.resolver.JavadocDefinitionResolver;
-import my.jwds.api.definition.resolver.PriorityDefinitionResolver;
-import my.jwds.api.mgt.AiaApiManager;
+import my.jwds.core.api.definition.resolver.DefinitionResolver;
+import my.jwds.core.api.definition.resolver.JavadocDefinitionResolver;
+import my.jwds.core.api.definition.resolver.PriorityDefinitionResolver;
+import my.jwds.core.api.mgt.AiaApiManager;
 import my.jwds.cache.CacheManager;
 import my.jwds.config.AiaConfig;
 import my.jwds.core.AiaApiScanner;
 import my.jwds.core.AiaManager;
 import my.jwds.core.AiaTemplateManager;
-import my.jwds.model.resolver.ModelResolver;
-import my.jwds.plugin.mgt.AiaPluginManager;
+import my.jwds.core.model.resolver.ModelResolver;
+import my.jwds.core.plugin.mgt.AiaPluginManager;
 import my.jwds.springweb.AiaSpringWebConfigure;
 import my.jwds.springweb.SpringWebAiaScanner;
-import my.jwds.springweb.parse.NoParserHandlerMappingParser;
+import my.jwds.springweb.data.AiaController;
 import my.jwds.springweb.parse.RequestMappingHandlerMappingParser;
 import my.jwds.springweb.parse.SpringHandlerMappingParserComposite;
 import my.jwds.springweb.parse.method.*;
@@ -123,7 +123,6 @@ public class AiaSpringBootConfigure extends AiaSpringWebConfigure {
     public SpringHandlerMappingParserComposite parserComposite(PriorityDefinitionResolver definitionResolver, HandlerMethodArgumentResolverRegister argumentResolverRegister){
         SpringHandlerMappingParserComposite parserComposite = new SpringHandlerMappingParserComposite();
         parserComposite.addParser(new RequestMappingHandlerMappingParser(definitionResolver,argumentResolverRegister));
-        parserComposite.setDefaultParser(new NoParserHandlerMappingParser());
         return parserComposite;
     }
 
@@ -134,5 +133,11 @@ public class AiaSpringBootConfigure extends AiaSpringWebConfigure {
         return  new SpringWebAiaScanner(applicationContext,parserComposite,aiaManager);
     }
 
-
+    @Bean
+    @ConditionalOnMissingBean
+    public AiaController aiaController(AiaManager aiaManager){
+        AiaController aiaController = new AiaController();
+        aiaController.setAiaManager(aiaManager);
+        return aiaController;
+    }
 }

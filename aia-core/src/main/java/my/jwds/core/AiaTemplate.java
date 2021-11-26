@@ -1,6 +1,6 @@
 package my.jwds.core;
 
-import my.jwds.api.InvokeApi;
+import my.jwds.core.api.InvokeApi;
 
 import java.util.Map;
 

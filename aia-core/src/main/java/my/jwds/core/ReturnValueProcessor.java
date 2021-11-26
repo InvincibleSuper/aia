@@ -1,6 +1,6 @@
 package my.jwds.core;
 
-import my.jwds.model.ModelProperty;
+import my.jwds.core.model.ModelProperty;
 
 
 public class ReturnValueProcessor {

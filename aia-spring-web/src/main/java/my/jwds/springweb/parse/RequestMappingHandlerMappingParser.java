@@ -1,9 +1,9 @@
 package my.jwds.springweb.parse;
 
-import my.jwds.api.InvokeApi;
-import my.jwds.api.InvokeParam;
-import my.jwds.api.InvokeUrl;
-import my.jwds.api.definition.resolver.DefinitionResolver;
+import my.jwds.core.api.InvokeApi;
+import my.jwds.core.api.InvokeParam;
+import my.jwds.core.api.InvokeUrl;
+import my.jwds.core.api.definition.resolver.DefinitionResolver;
 import my.jwds.core.AiaManager;
 import my.jwds.springweb.parse.method.HandlerMethodArgumentResolver;
 import my.jwds.springweb.parse.method.HandlerMethodArgumentResolverRegister;
@@ -18,6 +18,10 @@ import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandl
 
 import java.util.*;
 
+
+/**
+ * 对{@link RequestMappingHandlerMapping}的解析支持
+ */
 public class RequestMappingHandlerMappingParser extends AbstractHandlerMappingParser {
 
 
@@ -86,6 +90,7 @@ public class RequestMappingHandlerMappingParser extends AbstractHandlerMappingPa
                 InvokeUrl invokeUrl = new InvokeUrl();
                 invokeUrl.setUrl(path);
                 invokeUrl.setMethod(method.name());
+                res.add(invokeUrl);
             }
         }
         return res;

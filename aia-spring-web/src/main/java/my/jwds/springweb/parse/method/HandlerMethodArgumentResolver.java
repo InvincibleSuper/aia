@@ -1,17 +1,13 @@
 package my.jwds.springweb.parse.method;
 
-import my.jwds.api.InvokeParam;
+import my.jwds.core.api.InvokeParam;
 import org.springframework.core.MethodParameter;
 import org.springframework.core.Ordered;
-
-import java.lang.reflect.Method;
-import java.lang.reflect.Parameter;
-import java.util.List;
 
 /**
  * handlerMethod 属性解析
  * 解析出Spring处理方法的属性,生成执行参数
- * @see my.jwds.api.InvokeParam
+ * @see my.jwds.core.api.InvokeParam
  */
 public interface HandlerMethodArgumentResolver extends Ordered {
 

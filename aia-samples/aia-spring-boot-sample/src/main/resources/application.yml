@@ -1,2 +1,8 @@
 aia:
   path: aia
+
+spring:
+  mvc:
+    view:
+      suffix: .html
+      prefix: /aia/

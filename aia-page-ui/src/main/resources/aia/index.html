@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>自动接口文档</title>
+    <link href="import/bootstrap/css/bootstrap.min.css" rel="stylesheet"/>
+    <link href="import/treeview/bootstrap-treeview.min.css" rel="stylesheet"/>
+    <link href="css/aia.css" rel="stylesheet"/>
+</head>
+<body>
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">Auto interface</a>
+            </div>
+            <div id="navbar" class="navbar-collapse collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="#">Dashboard</a></li>
+                    <li><a href="#">Settings</a></li>
+                    <li><a href="#">Profile</a></li>
+                    <li><a href="#">Help</a></li>
+                </ul>
+                <form class="navbar-form navbar-right">
+                    <input type="text" class="form-control" placeholder="Search...">
+                </form>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-1 col-md-1 /dd sidebar">
+                <ul class="nav nav-sidebar">
+                    <li class="active" name="template" url="/aia/info/template">
+                        <a href="#">
+                            <div class="nav-sidebar-font">
+                                <span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span>
+                                <span>模板</span>
+                            </div>
+                        </a>
+                    </li>
+                    <li name="api" url="/aia/info/api">
+                        <a href="#">
+                            <div class="nav-sidebar-font">
+                                <span class="glyphicon glyphicon-tasks" aria-hidden="true"></span>
+                                <span>API</span>
+                            </div>
+                        </a>
+                    </li>
+
+                    <li name="plugin" url="/aia/info/plugin">
+                        <a href="#">
+                            <div class="nav-sidebar-font">
+                                <span class="glyphicon glyphicon-wrench" aria-hidden="true"></span>
+                                <span>插件</span>
+                            </div>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-sm-2 col-md-2 content">
+                <div class="content-tree" id="content-tree">
+                </div>
+            </div>
+            <div class="col-sm-9 col-md-9 invoke">
+                <div class="invoke-tabs">
+                    <ul class="nav nav-tabs">
+                    </ul>
+                </div>
+                <div class="invoke-content">
+                    <div class="embed-responsive embed-responsive-16by9 invoke-content-items">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+<script src="import/jquery/jquery-3.6.0.min.js"></script>
+<script src="import/bootstrap/js/bootstrap.min.js"></script>
+<script src="import/treeview/bootstrap-treeview.min.js"></script>
+<script src="js/aia.js"></script>
+</html>

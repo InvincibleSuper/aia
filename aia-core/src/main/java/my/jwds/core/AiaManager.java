@@ -1,10 +1,10 @@
 package my.jwds.core;
 
 
-import my.jwds.api.InvokeApi;
-import my.jwds.api.mgt.AiaApiManager;
-import my.jwds.plugin.AiaPlugin;
-import my.jwds.plugin.mgt.AiaPluginManager;
+import my.jwds.core.api.InvokeApi;
+import my.jwds.core.api.mgt.AiaApiManager;
+import my.jwds.core.plugin.AiaPlugin;
+import my.jwds.core.plugin.mgt.AiaPluginManager;
 
 import java.util.List;
 import java.util.Map;
@@ -62,78 +62,6 @@ public class AiaManager implements AiaTemplateManager, AiaPluginManager, AiaApiM
 
 
     /**
-     * 注册api
-     *
-     * @param api api
-     */
-    @Override
-    public void addApi(InvokeApi api) {
-
-    }
-
-    /**
-     * 根据组注册api列表
-     *
-     * @param group 组
-     * @param apis  api列表
-     */
-    @Override
-    public void addGroupApi(String group, List<InvokeApi> apis) {
-
-    }
-
-    /**
-     * 注册所有api
-     *
-     * @param all 所有api
-     */
-    @Override
-    public void addAll(List<InvokeApi> all) {
-
-    }
-
-    /**
-     * 注册所有api
-     *
-     * @param all 所有api
-     */
-    @Override
-    public void addAll(Map<String, List<InvokeApi>> all) {
-
-    }
-
-    /**
-     * 获取组
-     *
-     * @return 组列表
-     */
-    @Override
-    public Set<String> getGroup() {
-        return null;
-    }
-
-    /**
-     * 获取组
-     *
-     * @param group 组名
-     * @return
-     */
-    @Override
-    public List<InvokeApi> getGroupInvokeApi(String group) {
-        return null;
-    }
-
-    /**
-     * 全部api
-     *
-     * @return 组和api的键值对
-     */
-    @Override
-    public Map<String, List<InvokeApi>> allApi() {
-        return null;
-    }
-
-    /**
      * 添加模板
      *
      * @param template 模板
@@ -183,6 +111,78 @@ public class AiaManager implements AiaTemplateManager, AiaPluginManager, AiaApiM
     @Override
     public Map<String, AiaTemplate> getGroupTemplate(String group) {
         return null;
+    }
+
+    /**
+     * 注册api
+     *
+     * @param api api
+     */
+    @Override
+    public void addApi(InvokeApi api) {
+
+    }
+
+    /**
+     * 根据组注册api列表
+     *
+     * @param group 组
+     * @param apis  api列表
+     */
+    @Override
+    public void addGroupApi(String group, List<InvokeApi> apis) {
+
+    }
+
+    /**
+     * 注册所有api
+     *
+     * @param all 所有api
+     */
+    @Override
+    public void addAll(List<InvokeApi> all) {
+        getApiManager().addAll(all);
+    }
+
+    /**
+     * 注册所有api
+     *
+     * @param all 所有api
+     */
+    @Override
+    public void addAll(Map<String, List<InvokeApi>> all) {
+
+    }
+
+    /**
+     * 获取组
+     *
+     * @return 组列表
+     */
+    @Override
+    public Set<String> getApiGroup() {
+        return null;
+    }
+
+    /**
+     * 获取组
+     *
+     * @param group 组名
+     * @return
+     */
+    @Override
+    public List<InvokeApi> getGroupInvokeApi(String group) {
+        return null;
+    }
+
+    /**
+     * 全部api
+     *
+     * @return 组和api的键值对
+     */
+    @Override
+    public Map<String, List<InvokeApi>> allApi() {
+        return getApiManager().allApi();
     }
 
     /**

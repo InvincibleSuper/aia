@@ -49,9 +49,14 @@ public class ModelProperty {
     public ModelProperty() {
     }
 
+    public ModelProperty(String name, String type, String definition) {
+        this.name = name;
+        this.type = type;
+        this.definition = definition;
+    }
 
     public ModelProperty clone(){
-        return new ModelProperty(name,type);
+        return new ModelProperty(name,type,definition);
     }
 
     public String getDefinition() {

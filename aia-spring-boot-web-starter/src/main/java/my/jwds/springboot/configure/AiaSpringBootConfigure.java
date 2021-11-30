@@ -8,7 +8,7 @@ import my.jwds.cache.CacheManager;
 import my.jwds.config.AiaConfig;
 import my.jwds.core.AiaApiScanner;
 import my.jwds.core.AiaManager;
-import my.jwds.core.AiaTemplateManager;
+import my.jwds.core.template.AiaTemplateManager;
 import my.jwds.core.model.resolver.ModelResolver;
 import my.jwds.core.plugin.mgt.AiaPluginManager;
 import my.jwds.springweb.AiaSpringWebConfigure;

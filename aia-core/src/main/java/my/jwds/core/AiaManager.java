@@ -5,7 +5,10 @@ import my.jwds.core.api.InvokeApi;
 import my.jwds.core.api.mgt.AiaApiManager;
 import my.jwds.core.plugin.AiaPlugin;
 import my.jwds.core.plugin.mgt.AiaPluginManager;
+import my.jwds.core.template.AiaTemplate;
+import my.jwds.core.template.AiaTemplateManager;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -203,5 +206,15 @@ public class AiaManager implements AiaTemplateManager, AiaPluginManager, AiaApiM
     @Override
     public List<AiaPlugin> allPlugin() {
         return null;
+    }
+
+    /**
+     * 设置一个Api排序比较器
+     *
+     * @param comparator
+     */
+    @Override
+    public void setComparator(Comparator<InvokeApi> comparator) {
+        apiManager.setComparator(comparator);
     }
 }

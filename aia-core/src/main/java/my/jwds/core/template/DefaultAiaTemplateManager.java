@@ -1,4 +1,4 @@
-package my.jwds.core;
+package my.jwds.core.template;
 
 import my.jwds.cache.Cache;
 import my.jwds.cache.CacheManager;

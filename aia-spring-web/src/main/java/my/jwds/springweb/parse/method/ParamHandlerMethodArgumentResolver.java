@@ -6,7 +6,9 @@ import my.jwds.core.api.definition.resolver.DefinitionResolver;
 import my.jwds.core.model.ModelProperty;
 import my.jwds.core.model.ModelPropertyResolveInfo;
 import my.jwds.core.model.resolver.ModelResolver;
+import org.springframework.core.DefaultParameterNameDiscoverer;
 import org.springframework.core.MethodParameter;
+import org.springframework.core.ParameterNameDiscoverer;
 
 /**
  * 处理方法参数解析类，解析为param类型的参数，默认的兜底解析器
@@ -21,7 +23,7 @@ public class ParamHandlerMethodArgumentResolver implements HandlerMethodArgument
 
     private ModelResolver modelResolver;
 
-
+    private ParameterNameDiscoverer parameterNameDiscoverer = new DefaultParameterNameDiscoverer();
 
     public ParamHandlerMethodArgumentResolver(DefinitionResolver definitionResolver, ModelResolver modelResolver) {
         this.definitionResolver = definitionResolver;
@@ -64,6 +66,7 @@ public class ParamHandlerMethodArgumentResolver implements HandlerMethodArgument
      * @return 方法参数注释
      */
     protected String resolveArgumentName(MethodParameter parameter){
+        parameter.initParameterNameDiscovery(parameterNameDiscoverer);
         return parameter.getParameterName();
     }
 

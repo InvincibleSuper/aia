@@ -52,6 +52,7 @@ function parseApiTreeData(){
     }
     var apiInfos = allData[pageType]
     var treeDatas = []
+    let count = 0;
     for (let group in apiInfos) {
         var nodes = []
         for (let apiInfo of apiInfos[group]) {
@@ -59,7 +60,8 @@ function parseApiTreeData(){
                 text:getApiTreeItemHtml(apiInfo.url.method,apiInfo.url.url,apiInfo.definition),
                 type:apiInfo.url.method,
                 url:apiInfo.url.url,
-                requestUrl:apiInfo.url.method+"_"+apiInfo.url.url
+                unique:pageType+"_"+count++,
+                data:apiInfo
             })
         }
         treeDatas.push({
@@ -84,8 +86,8 @@ function initContent(){
         "collapseIcon":"glyphicon glyphicon-chevron-up",
         "borderColor":"white",
         onNodeSelected: function(event, data) {
-            if (data.requestUrl != null){
-                openInvoke(data.requestUrl,data.url,data.type)
+            if (data.unique != null){
+                openInvoke(data)
             }
 
         }
@@ -93,17 +95,18 @@ function initContent(){
 }
 
 
-function openInvoke(requestUrl,url,type){
+function openInvoke(data){
     $('.invoke-content-items>.invoke-content-item').hide();
     $('.invoke-tabs>.nav-tabs>li').removeClass("active");
-    if ($('.invoke-content-item[requestUrl="'+requestUrl+'"]').length == 0){
+    if ($('.invoke-content-item[unique="'+data.unique+'"]').length == 0){
+        chooseInfo = data.data
         $('.invoke-content-items')
-            .append(getFrameHtml(requestUrl,url));
+            .append(getFrameHtml(data.unique,data.url));
         $('.invoke-tabs>.nav-tabs')
-            .append(getTabHtml(requestUrl,url,type));
+            .append(getTabHtml(data.unique,data.url,data.type));
     }
-    $('.invoke-content-items>.invoke-content-item[requestUrl="'+requestUrl+'"]').show();
-    $('.invoke-tabs>.nav-tabs>li[requestUrl="'+requestUrl+'"]').addClass("active");
+    $('.invoke-content-items>.invoke-content-item[unique="'+data.unique+'"]').show();
+    $('.invoke-tabs>.nav-tabs>li[unique="'+data.unique+'"]').addClass("active");
     invokeInit()
 }
 
@@ -111,6 +114,8 @@ function openInvoke(requestUrl,url,type){
 /**
  * 执行区域模块
  */
+
+var chooseInfo = null;
 
 function invokeInit(){
     $('.invoke>.invoke-tabs>.nav-tabs>li').click(function (){
@@ -126,27 +131,34 @@ function invokeInit(){
     })
     $(".invoke .tab-close").click(function (){
         var chooseTab = $(this).parent().parent();
-        var requestUrl = chooseTab.attr('requestUrl')
+        var unique = chooseTab.attr('unique')
         if (chooseTab.attr('class').indexOf("active") != -1){
             if (chooseTab.next().length != 0){
-                openInvoke(chooseTab.next().attr('requestUrl'),null,null);
+                openInvoke({unique:chooseTab.next().attr('unique')});
             }else if (chooseTab.prev().length != 0){
-                openInvoke(chooseTab.prev().attr('requestUrl'),null,null);
+                openInvoke({unique:chooseTab.prev().attr('unique')});
             }
         }
 
-        $('.invoke-content-items>.invoke-content-item[requestUrl="'+requestUrl+'"]').remove();
-        $('.invoke-tabs>.nav-tabs>li[requestUrl="'+requestUrl+'"]').remove();
+        $('.invoke-content-items>.invoke-content-item[unique="'+unique+'"]').remove();
+        $('.invoke-tabs>.nav-tabs>li[unique="'+unique+'"]').remove();
     })
 }
 
 
-function getFrameHtml(requestUrl,url){
-    var frameHtml ='<iframe class="embed-responsive-item invoke-content-item" src="page/'+pageType+'.html?url='+url+'" requestUrl="'+requestUrl+'"></iframe>';
+function getFrameHtml(unique,url){
+
+
+    var frameHtml ='<iframe class="embed-responsive-item invoke-content-item" src="page/'+pageType+'.html?url='+url+'" unique="'+unique+'"></iframe>';
     return frameHtml;
 }
 
-function getTabHtml(requestUrl,url,type){
-    var tabHtml = '<li class="active" requestUrl="'+requestUrl+'" url="'+url+'" type="'+type+'"><a href="#"><span class="'+pageTypeIcon[pageType]+'"></span> '+type+' '+url+' <span class="glyphicon glyphicon-remove tab-close"></span></a></li>'
+function getTabHtml(unique,url,type){
+    var tabHtml = '<li class="active" unique="'+unique+'" url="'+url+'" type="'+type+'"><a href="#"><span class="'+pageTypeIcon[pageType]+'"></span> '+type+' '+url+' <span class="glyphicon glyphicon-remove tab-close"></span></a></li>'
     return tabHtml;
+}
+
+
+function searchData(chooseInfo){
+
 }

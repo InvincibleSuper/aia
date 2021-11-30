@@ -2,6 +2,7 @@ package my.jwds.core.api.mgt;
 
 import my.jwds.core.api.InvokeApi;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -10,6 +11,12 @@ import java.util.Set;
  * api管理器
  */
 public interface AiaApiManager {
+
+    /**
+     * 设置一个Api排序比较器
+     * @param comparator
+     */
+    void setComparator(Comparator<InvokeApi> comparator);
 
 
     /**

@@ -1,5 +1,7 @@
 package my.jwds.core.api;
 
+import java.util.Objects;
+
 /**
  * 执行url，包含 请求方法和请求路径
  */
@@ -33,5 +35,22 @@ public class InvokeUrl extends InvokeDefinition {
     }
 
     public InvokeUrl() {
+    }
+
+    public InvokeUrl clone(){
+        return new InvokeUrl(getDefinition(),getMethod(),getUrl());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        InvokeUrl invokeUrl = (InvokeUrl) o;
+        return Objects.equals(method, invokeUrl.method) && Objects.equals(url, invokeUrl.url);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(method, url);
     }
 }

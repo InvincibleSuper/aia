@@ -5,7 +5,8 @@ import java.io.Serializable;
 /**
  * 执行定义，也就是注释
  */
-public class InvokeDefinition implements Serializable {
+public class InvokeDefinition implements Serializable{
+
 
     /**
      * 定义，也就是注释

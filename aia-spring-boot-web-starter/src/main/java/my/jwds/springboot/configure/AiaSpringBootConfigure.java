@@ -130,7 +130,7 @@ public class AiaSpringBootConfigure extends AiaSpringWebConfigure {
     @Bean
     @ConditionalOnMissingBean
     public AiaApiScanner aiaApiScanner(ApplicationContext applicationContext,SpringHandlerMappingParserComposite parserComposite,AiaManager aiaManager){
-        return  new SpringWebAiaScanner(applicationContext,parserComposite,aiaManager);
+        return new SpringWebAiaScanner(applicationContext,parserComposite,aiaManager);
     }
 
     @Bean

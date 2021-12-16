@@ -16,6 +16,8 @@ public class User {
      */
     private String pwd;
 
+    private User user;
+
     public String getName() {
         return name;
     }
@@ -30,5 +32,22 @@ public class User {
 
     public void setPwd(String pwd) {
         this.pwd = pwd;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public User() {
+    }
+
+    public User(String name, String pwd, User user) {
+        this.name = name;
+        this.pwd = pwd;
+        this.user = user;
     }
 }

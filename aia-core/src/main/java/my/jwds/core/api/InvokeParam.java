@@ -22,6 +22,11 @@ public class InvokeParam extends InvokeDefinition  {
      */
     private String prefix;
 
+    /**
+     * 名称
+     */
+    private String name;
+
 
     public String getContentType() {
         return contentType;
@@ -47,11 +52,20 @@ public class InvokeParam extends InvokeDefinition  {
         this.prefix = prefix;
     }
 
-    public InvokeParam(String definition, String contentType, ModelProperty model, String prefix) {
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public InvokeParam(String definition, String contentType, ModelProperty model, String prefix, String name) {
         super(definition);
         this.contentType = contentType;
         this.model = model;
         this.prefix = prefix;
+        this.name = name;
     }
 
     public InvokeParam() {
@@ -59,6 +73,6 @@ public class InvokeParam extends InvokeDefinition  {
     }
 
     public InvokeParam clone(){
-        return new InvokeParam(getDefinition(),getContentType(),getModel().clone(),getPrefix());
+        return new InvokeParam(getDefinition(),getContentType(),getModel().clone(),getPrefix(),getName());
     }
 }

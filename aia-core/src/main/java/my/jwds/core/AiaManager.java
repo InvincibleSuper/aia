@@ -2,6 +2,7 @@ package my.jwds.core;
 
 
 import my.jwds.core.api.InvokeApi;
+import my.jwds.core.api.InvokeUrl;
 import my.jwds.core.api.mgt.AiaApiManager;
 import my.jwds.core.plugin.AiaPlugin;
 import my.jwds.core.plugin.mgt.AiaPluginManager;
@@ -16,7 +17,6 @@ import java.util.Set;
 
 /**
  * 总管理类，包含 模板管理器、插件管理器、api管理器
- * 使用门面模式封装
  */
 public class AiaManager implements AiaTemplateManager, AiaPluginManager, AiaApiManager {
 
@@ -26,6 +26,8 @@ public class AiaManager implements AiaTemplateManager, AiaPluginManager, AiaApiM
     private AiaPluginManager pluginManager;
 
     private AiaApiManager apiManager;
+
+    private boolean scan;
 
 
     public AiaManager(AiaTemplateManager templateManager, AiaPluginManager pluginManager, AiaApiManager apiManager) {
@@ -71,7 +73,7 @@ public class AiaManager implements AiaTemplateManager, AiaPluginManager, AiaApiM
      */
     @Override
     public void addTemplate(AiaTemplate template) {
-
+        templateManager.addTemplate(template);
     }
 
     /**
@@ -101,8 +103,8 @@ public class AiaManager implements AiaTemplateManager, AiaPluginManager, AiaApiM
      * @return 全部模板
      */
     @Override
-    public Map<String, Map<String, AiaTemplate>> allTemplate() {
-        return null;
+    public Map<String, Map<InvokeUrl, AiaTemplate>> allTemplate() {
+        return templateManager.allTemplate();
     }
 
     /**
@@ -112,7 +114,7 @@ public class AiaManager implements AiaTemplateManager, AiaPluginManager, AiaApiM
      * @return
      */
     @Override
-    public Map<String, AiaTemplate> getGroupTemplate(String group) {
+    public Map<InvokeUrl, AiaTemplate> getGroupTemplate(String group) {
         return null;
     }
 
@@ -216,5 +218,13 @@ public class AiaManager implements AiaTemplateManager, AiaPluginManager, AiaApiM
     @Override
     public void setComparator(Comparator<InvokeApi> comparator) {
         apiManager.setComparator(comparator);
+    }
+
+    public boolean isScan() {
+        return scan;
+    }
+
+    public void setScan(boolean scan) {
+        this.scan = scan;
     }
 }

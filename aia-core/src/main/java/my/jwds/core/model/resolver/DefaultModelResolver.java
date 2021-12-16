@@ -81,6 +81,9 @@ public class DefaultModelResolver implements ModelResolver<Type>{
         Map<Field, FieldDefinition> propertyMap = definitionResolver.resolveField(clz);
         for (FieldDefinition fieldDefinition : propertyMap.values()) {
             Field field = fieldDefinition.getField();
+            if (Modifier.isFinal(field.getModifiers()) || Modifier.isStatic(field.getModifiers())){
+                continue;
+            }
             ModelProperty property = resolveProperty(field.getGenericType(),field.getName(),type, field.getDeclaringClass(),set);
             property.setDefinition(fieldDefinition.getDefinition());
             properties.add(property);

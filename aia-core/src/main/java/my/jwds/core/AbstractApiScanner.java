@@ -23,7 +23,16 @@ public abstract class AbstractApiScanner implements AiaApiScanner {
     @Override
     public void startScanner() {
         scanning();
-        getTemplateGenerator().generate(aiaManager);
+        new Thread(()->{
+            while(!getAiaManager().isScan()){
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            getTemplateGenerator().generate(aiaManager);
+        }).start();
     }
 
 

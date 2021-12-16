@@ -24,12 +24,17 @@ public class SpringWebAiaScanner extends AbstractApiScanner {
         this.setAiaManager(aiaManager);
     }
     @PostConstruct
+    public void startScanner(){
+        super.startScanner();
+    }
+
     @Override
     protected void scanning() {
         new Thread(()->{
             List<HandlerMapping> handlerMappings = HandlerMappingUtils.get(ac);
             for (HandlerMapping handlerMapping : handlerMappings) {
                 parserRegister.parse(getAiaManager(),handlerMapping);
+                getAiaManager().setScan(true);
             }
         }).start();
     }

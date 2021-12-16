@@ -1,4 +1,4 @@
-var pageType = "template"
+var pageType = null
 
 var pageTypeIcon = {
     "template":"glyphicon glyphicon-list-alt",
@@ -8,29 +8,39 @@ var pageTypeIcon = {
 
 var allData = {}
 
+/**
+ * 初始化
+ */
+
+function aiaInit(){
+    initNav()
+    $('.nav-sidebar>li[name=template]').click();
+}
 
 /**
  * 侧边栏模块
  */
-$('.nav-sidebar>li').click(function (){
-    $('.nav-sidebar>li').removeClass("active");
-    $(this).addClass("active");
-    var currentPageType = $(this).attr('name');
-    if (allData[currentPageType] == null){
-        $.ajax({
-            url: $(this).attr('url'),
-            async:false,
-            success: function (data){
-                allData[currentPageType] = data;
-            }
-        });
-    }
-    if (pageType != currentPageType){
-        pageType = currentPageType;
-        initContent();
-    }
+function initNav(){
+    $('.nav-sidebar>li').click(function (){
+        $('.nav-sidebar>li').removeClass("active");
+        $(this).addClass("active");
+        var currentPageType = $(this).attr('name');
+        if (allData[currentPageType] == null){
+            $.ajax({
+                url: $(this).attr('url'),
+                async:false,
+                success: function (data){
+                    allData[currentPageType] = data;
+                }
+            });
+        }
+        if (pageType != currentPageType){
+            pageType = currentPageType;
+            initContent();
+        }
 
-})
+    })
+}
 
 
 /**
@@ -38,13 +48,40 @@ $('.nav-sidebar>li').click(function (){
  */
 
 var treeDataParseFun = {
-    "template":null,
+    "template":parseTemplateTreeData,
     "api":parseApiTreeData,
     "plugin":null
 }
 
 var treeDataCache = {}
 
+function parseTemplateTreeData(){
+    if (treeDataCache[pageType] != null){
+        return treeDataCache[pageType]
+    }
+    var templateInfos = allData[pageType]
+    var treeDatas = []
+    let count = 0;
+    for (let group in templateInfos) {
+        var nodes = []
+        for (let templateInfo of templateInfos[group]) {
+            var apiInfo = templateInfo.api
+            nodes.push({
+                text:getApiTreeItemHtml(apiInfo.url.method,apiInfo.url.url,apiInfo.definition),
+                type:apiInfo.url.method,
+                url:apiInfo.url.url,
+                unique:pageType+"_"+count++,
+                data:templateInfo
+            })
+        }
+        treeDatas.push({
+            text:group,
+            nodes:nodes
+        });
+    }
+    treeDataCache[pageType] = treeDatas
+    return treeDatas;
+}
 
 function parseApiTreeData(){
     if (treeDataCache[pageType] != null){
@@ -121,6 +158,9 @@ function invokeInit(){
     $('.invoke>.invoke-tabs>.nav-tabs>li').click(function (){
         $('.invoke>.invoke-tabs>.nav-tabs>li').removeClass("active");
         $(this).addClass("active");
+        var unique = $(this).attr('unique')
+        $('.invoke-content-items>.invoke-content-item').hide();
+        $('.invoke-content-items>.invoke-content-item[unique="'+unique+'"]').show();
     })
 
     $('.invoke>.invoke-tabs>.nav-tabs>li').hover(function (){
@@ -162,3 +202,4 @@ function getTabHtml(unique,url,type){
 function searchData(chooseInfo){
 
 }
+aiaInit();

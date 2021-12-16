@@ -1,9 +1,15 @@
 package my.jwds.core.template;
 
 import my.jwds.core.api.InvokeApi;
+import my.jwds.core.api.InvokeUrl;
 
+import java.util.LinkedHashMap;
 import java.util.Map;
 
+/**
+ * 模板，在aia里是一个调用的总集成，包含api，返回值
+ * 本身是一个调用链，next指向下一个模板
+ */
 public class AiaTemplate {
 
 
@@ -18,9 +24,20 @@ public class AiaTemplate {
     private String group;
 
     /**
-     * 调用api
+     * 调用url
      */
-    private InvokeApi api;
+    private InvokeUrl url;
+
+    /**
+     * 参数
+     */
+    private Map<String,TemplateParam> params;
+
+
+    /**
+     * 请求头
+     */
+    private Map<String,String> headers;
 
     /**
      * 返回值值处理器
@@ -48,6 +65,40 @@ public class AiaTemplate {
     private Map<String,String> plugins;
 
 
+
+    class TemplateParam{
+        String type;
+        String value;
+        boolean array;
+
+        public TemplateParam(String type, String value) {
+            this.type = type;
+            this.value = value;
+        }
+
+        public TemplateParam(String type, String value, boolean array) {
+            this.type = type;
+            this.value = value;
+            this.array = array;
+        }
+    }
+
+
+    public void addParam(String name,String value,String type){
+        if (params == null) {
+            params = new LinkedHashMap<>();
+            params.put(name,new TemplateParam(type,value));
+        }
+    }
+
+    public void addParam(String name,String value,String type,boolean array){
+        if (params == null) {
+            params = new LinkedHashMap<>();
+            params.put(name,new TemplateParam(type,value,array));
+        }
+    }
+
+
     public String getName() {
         return name;
     }
@@ -64,12 +115,12 @@ public class AiaTemplate {
         this.group = group;
     }
 
-    public InvokeApi getApi() {
-        return api;
+    public InvokeUrl getUrl() {
+        return url;
     }
 
-    public void setApi(InvokeApi api) {
-        this.api = api;
+    public void setUrl(InvokeUrl url) {
+        this.url = url;
     }
 
     public ReturnValueProcessor getProcessor() {
@@ -110,5 +161,21 @@ public class AiaTemplate {
 
     public void setPlugins(Map<String, String> plugins) {
         this.plugins = plugins;
+    }
+
+    public Map<String, TemplateParam> getParams() {
+        return params;
+    }
+
+    public void setParams(Map<String, TemplateParam> params) {
+        this.params = params;
+    }
+
+    public Map<String, String> getHeaders() {
+        return headers;
+    }
+
+    public void setHeaders(Map<String, String> headers) {
+        this.headers = headers;
     }
 }

@@ -106,6 +106,7 @@ public class ParamHandlerMethodArgumentResolver implements HandlerMethodArgument
         invokeParam.setDefinition(resolveDefinition(parameter));
         invokeParam.setModel(resolveModel(parameter));
         invokeParam.setPrefix(resolvePrefix(parameter));
+        invokeParam.setName(resolveArgumentName(parameter));
         return invokeParam;
     }
 

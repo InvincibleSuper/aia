@@ -1,6 +1,6 @@
 package my.jwds.core.model;
 
-public class StringModelProperty extends ModelProperty{
+public class StringModelProperty extends SimpleModelProperty{
 
     private String value;
 

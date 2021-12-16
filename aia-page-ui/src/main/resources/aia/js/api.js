@@ -1,5 +1,4 @@
 var info = parent.chooseInfo
-console.log(info)
 $(".method").text(info.url.method);
 $(".url-text").text(info.url.url)
 $(".definition").text(info.definition == null || info.definition == "" ? "这个请求没有说明":info.definition)
@@ -28,6 +27,7 @@ if (Object.keys(info.params).length == 0) {
 }
 
 function parse(params,prevText){
+    if (params==null)return "";
     var prefix = "";
     if (prevText.length != 0)prefix = prevText+"└"
     var res = "";
@@ -36,7 +36,7 @@ function parse(params,prevText){
         var contentType = params[i].contentType
         var value = params[i].value
         var definition = params[i].definition
-        if (contentType == null)contentType = "同上级类型"
+        if (contentType == null)contentType = "/"
         if (value == null)value =""
         if (definition == null)definition = "无"
 

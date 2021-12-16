@@ -50,7 +50,7 @@ public class ObjectModelProperty extends ModelProperty{
                 cloneArray[i] = containerContent[i].clone();
             }
         }
-
-        return new ObjectModelProperty(getName(),getType(),cloneArray,getModel().clone());
+        Model cloneModel = getModel() == null?null:getModel().clone();
+        return new ObjectModelProperty(getName(),getType(),cloneArray,cloneModel);
     }
 }

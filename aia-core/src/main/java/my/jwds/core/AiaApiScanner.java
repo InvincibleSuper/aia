@@ -9,7 +9,6 @@ public interface AiaApiScanner {
     void startScanner();
 
 
-
     /**
      * 获取aia管理器
      * @return aia管理器

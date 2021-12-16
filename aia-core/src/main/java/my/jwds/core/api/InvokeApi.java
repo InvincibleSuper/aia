@@ -2,13 +2,15 @@ package my.jwds.core.api;
 
 
 
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 /**
  * 执行api，把url param header 结合到此类
  */
-public class InvokeApi extends InvokeDefinition{
+public class InvokeApi extends InvokeDefinition {
 
     private InvokeUrl url;
 
@@ -67,4 +69,16 @@ public class InvokeApi extends InvokeDefinition{
     public InvokeApi() {
 
     }
+
+    public InvokeApi clone(){
+        List<InvokeParam> cloneParams = new ArrayList<>();
+        for (InvokeParam param : getParams()) {
+            cloneParams.add(param.clone());
+        }
+        Map<String,String> cloneHeaders = new LinkedHashMap<>();
+        cloneHeaders.putAll(getHeaders());
+        return new InvokeApi(getDefinition(),getUrl().clone(),cloneParams,cloneHeaders,getGroup());
+    }
+
+
 }

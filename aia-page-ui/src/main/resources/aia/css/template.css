@@ -1,0 +1,16 @@
+.header-name,.param-name{
+    width: 15%;
+}
+.header-name-text,.param-name-text{
+    font-weight: bold;
+}
+.param-value textarea{
+    resize: none;
+    height: 200px;
+}
+.param-type{
+    color: rgba(0, 0, 0, 0.5);
+}
+.send-request{
+    width: 100%;
+}

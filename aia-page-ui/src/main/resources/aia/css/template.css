@@ -14,3 +14,23 @@
 .send-request{
     width: 100%;
 }
+
+.error{
+    border-color:red;
+}
+.response-panel{
+    margin-top: 20px;
+    position: relative;
+}
+.response-type-div{
+    position: absolute;
+    top: 0px;
+    right: 0px;
+}
+.response-type-option:hover{
+    cursor:pointer;
+}
+.response-type-btn{
+    background: #f5f5f5;
+    border:#f5f5f5;
+}

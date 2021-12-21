@@ -53,6 +53,13 @@ public class MethodDefinition {
         this.definition = definition;
     }
 
+    public MethodDefinition(Method method, String definition, String returnDefinition, String[] parameterDefinition) {
+        this.method = method;
+        this.definition = definition;
+        this.returnDefinition = returnDefinition;
+        this.parameterDefinition = parameterDefinition;
+    }
+
     public MethodDefinition() {
     }
 }

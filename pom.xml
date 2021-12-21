@@ -21,6 +21,7 @@
         <maven.compiler.target>8</maven.compiler.target>
         <aia.version>1.0-SNAPSHOT</aia.version>
         <spring.boot.version>2.5.4</spring.boot.version>
+        <fastjson.version>1.2.78</fastjson.version>
     </properties>
     <dependencyManagement>
         <dependencies>
@@ -46,6 +47,13 @@
                 <artifactId>aia-spring-boot-web-starter</artifactId>
                 <version>${aia.version}</version>
             </dependency>
+            <!-- https://mvnrepository.com/artifact/com.alibaba/fastjson -->
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>fastjson</artifactId>
+                <version>${fastjson.version}</version>
+            </dependency>
+
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-dependencies</artifactId>

@@ -38,6 +38,21 @@ public interface DefinitionResolver {
      */
     Map<Class,ClassDefinition> getCache();
 
+
+    /**
+     * 解析属性注释
+     * @param clz 解析的类
+     * @return 属性和属性注释的键值对
+     */
+    FieldDefinition resolveField(Class clz,Field field);
+
+    /**
+     * 解析方法注释
+     * @param clz 解析类
+     * @return 方法和方法注释的键值对
+     */
+    MethodDefinition resolveMethod(Class clz,Method method);
+
     /**
      * 返回类注释
      * @param clz 类

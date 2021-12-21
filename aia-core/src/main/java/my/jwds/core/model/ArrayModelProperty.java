@@ -28,6 +28,9 @@ public class ArrayModelProperty extends ModelProperty{
     }
 
     public ArrayModelProperty clone(){
+        if (getComponent() == null){
+            return new ArrayModelProperty(getName(),getType(),null);
+        }
         return new ArrayModelProperty(getName(),getType(),getComponent().clone());
     }
 }

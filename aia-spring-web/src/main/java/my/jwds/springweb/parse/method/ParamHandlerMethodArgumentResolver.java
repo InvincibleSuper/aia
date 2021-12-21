@@ -112,6 +112,6 @@ public class ParamHandlerMethodArgumentResolver implements HandlerMethodArgument
 
     @Override
     public int getOrder() {
-        return Integer.MIN_VALUE;
+        return Integer.MAX_VALUE;
     }
 }

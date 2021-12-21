@@ -11,10 +11,36 @@ var allData = {}
 /**
  * 初始化
  */
-
+var init;
 function aiaInit(){
-    initNav()
-    $('.nav-sidebar>li[name=template]').click();
+    $('.aia').hide();
+    $('.jumbotron').hide();
+    init = setInterval(isScan(),500)
+
+}
+function isScan(){
+    var scan = scanFlag()
+    if (scan){
+        clearInterval(init)
+        $('.aia').show();
+        $('.jumbotron').hide();
+        initNav()
+        $('.nav-sidebar>li[name=template]').click();
+    }else{
+        $('.jumbotron').show();
+    }
+}
+
+function scanFlag(){
+    var res = false;
+    $.ajax({
+        url: '/aia/info/scan',
+        async:false,
+        success: function (data){
+            res = data;
+        }
+    });
+    return res;
 }
 
 /**
@@ -65,13 +91,14 @@ function parseTemplateTreeData(){
     for (let group in templateInfos) {
         var nodes = []
         for (let templateInfo of templateInfos[group]) {
-            var apiInfo = templateInfo.api
+            var url = templateInfo.url
             nodes.push({
-                text:getApiTreeItemHtml(apiInfo.url.method,apiInfo.url.url,apiInfo.definition),
-                type:apiInfo.url.method,
-                url:apiInfo.url.url,
+                text:getTemplateTreeItemHtml(url.method,url.url,templateInfo.name),
+                type:url.method,
+                url:url.url,
                 unique:pageType+"_"+count++,
-                data:templateInfo
+                data:templateInfo,
+                tabName: templateInfo.name
             })
         }
         treeDatas.push({
@@ -98,7 +125,8 @@ function parseApiTreeData(){
                 type:apiInfo.url.method,
                 url:apiInfo.url.url,
                 unique:pageType+"_"+count++,
-                data:apiInfo
+                data:apiInfo,
+                tabName: apiInfo.url.method+' '+apiInfo.url.url
             })
         }
         treeDatas.push({
@@ -111,8 +139,14 @@ function parseApiTreeData(){
 }
 
 function getApiTreeItemHtml(type,url,definition){
-    var span = definition == null||definition =="" ? "":"<span>"+definition+"</span>";
+    var span = definition == null||definition =="" ? "":definition;
+    var brIndex = span.indexOf('\n')
+    span = brIndex==-1?span:span.substring(0,brIndex)
     return "<div class='content-tree-item content-tree-item-get'></div><div class='content-tree-item'><p>"+type+" "+url+"</p>"+span+"</div>"
+}
+
+function getTemplateTreeItemHtml(type,url,name){
+    return "<div class='content-tree-item content-tree-item-get'></div><div class='content-tree-item'><p>"+name+"</p></div>"
 }
 
 function initContent(){
@@ -140,10 +174,11 @@ function openInvoke(data){
         $('.invoke-content-items')
             .append(getFrameHtml(data.unique,data.url));
         $('.invoke-tabs>.nav-tabs')
-            .append(getTabHtml(data.unique,data.url,data.type));
+            .append(getTabHtml(data.unique,data.tabName));
     }
-    $('.invoke-content-items>.invoke-content-item[unique="'+data.unique+'"]').show();
+
     $('.invoke-tabs>.nav-tabs>li[unique="'+data.unique+'"]').addClass("active");
+    $('.invoke-content-items>.invoke-content-item[unique="'+data.unique+'"]').show();
     invokeInit()
 }
 
@@ -165,7 +200,7 @@ function invokeInit(){
 
     $('.invoke>.invoke-tabs>.nav-tabs>li').hover(function (){
         $('.invoke .tab-close').hide();
-        $(this).find('.tab-close').show();
+        $(this).find('.tab-close').css('display','block');
     },function (){
         $('.invoke .tab-close').hide();
     })
@@ -193,8 +228,8 @@ function getFrameHtml(unique,url){
     return frameHtml;
 }
 
-function getTabHtml(unique,url,type){
-    var tabHtml = '<li class="active" unique="'+unique+'" url="'+url+'" type="'+type+'"><a href="#"><span class="'+pageTypeIcon[pageType]+'"></span> '+type+' '+url+' <span class="glyphicon glyphicon-remove tab-close"></span></a></li>'
+function getTabHtml(unique,tabName){
+    var tabHtml = '<li class="active" unique="'+unique+'" ><a href="#"><span class="'+pageTypeIcon[pageType]+'"></span> '+tabName+' <span class="glyphicon glyphicon-remove tab-close"></span></a></li>'
     return tabHtml;
 }
 

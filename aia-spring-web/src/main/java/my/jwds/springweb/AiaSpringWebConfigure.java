@@ -7,6 +7,9 @@ import my.jwds.cache.DefaultCacheManager;
 import my.jwds.config.AiaConfig;
 import my.jwds.core.AiaApiScanner;
 import my.jwds.core.AiaManager;
+import my.jwds.core.security.QualifiedNameWhiteList;
+import my.jwds.core.security.SecuritySupport;
+import my.jwds.core.security.UrlWhiteList;
 import my.jwds.core.template.AiaTemplateManager;
 import my.jwds.core.template.DefaultAiaTemplateManager;
 import my.jwds.core.api.definition.resolver.DefinitionResolver;
@@ -36,6 +39,26 @@ public class AiaSpringWebConfigure {
 
     public AiaConfig aiaConfig(){
         return new AiaConfig(true, ClassUtils.originPath());
+    }
+
+
+    public SecuritySupport aiaSecuritySupport(AiaConfig config){
+        SecuritySupport securitySupport = new SecuritySupport();
+        if (config.getPatternQualifiedNames()!= null){
+            QualifiedNameWhiteList qualifiedNameWhiteList = new QualifiedNameWhiteList();
+            for (String qualifiedName : config.getPatternQualifiedNames()) {
+                qualifiedNameWhiteList.addWhiteList(qualifiedName);
+            }
+            securitySupport.setQualifiedNameWhiteList(qualifiedNameWhiteList);
+        }
+        if (config.getPatternUrl() != null){
+            UrlWhiteList urlWhiteList = new UrlWhiteList();
+            for (String url : config.getPatternUrl()) {
+                urlWhiteList.addWhiteList(url);
+            }
+            securitySupport.setUrlWhiteList(urlWhiteList);
+        }
+        return securitySupport;
     }
 
 
@@ -89,9 +112,12 @@ public class AiaSpringWebConfigure {
         return resolverRegister;
     }
 
-    public SpringHandlerMappingParserComposite parserComposite(DefinitionResolver definitionResolver, HandlerMethodArgumentResolverRegister argumentResolverRegister){
+    public SpringHandlerMappingParserComposite parserComposite(DefinitionResolver definitionResolver
+            ,ModelResolver modelResolver
+            , HandlerMethodArgumentResolverRegister argumentResolverRegister
+            ,SecuritySupport securitySupport){
         SpringHandlerMappingParserComposite parserComposite = new SpringHandlerMappingParserComposite();
-        parserComposite.addParser(new RequestMappingHandlerMappingParser(definitionResolver,argumentResolverRegister));
+        parserComposite.addParser(new RequestMappingHandlerMappingParser(definitionResolver,modelResolver,argumentResolverRegister,securitySupport));
         return parserComposite;
     }
 
@@ -99,13 +125,14 @@ public class AiaSpringWebConfigure {
     @Bean
     public AiaApiScanner aiaApiScanner(ApplicationContext context){
         AiaConfig aiaConfig = aiaConfig();
+        SecuritySupport securitySupport = aiaSecuritySupport(aiaConfig);
         CacheManager cacheManager = cacheManager();
         AiaManager aiaManager = aiaManager(aiaTemplateManager(cacheManager),aiaPluginManager(cacheManager),aiaApiManager(cacheManager));
         JavadocDefinitionResolver javadocDefinitionResolver = new JavadocDefinitionResolver(aiaConfig.getSrcPath());
         DefinitionResolver definitionResolver = priorityDefinitionResolver(Collections.singletonList(javadocDefinitionResolver));
         ModelResolver modelResolver = defaultModelResolver(definitionResolver);
         HandlerMethodArgumentResolverRegister argumentResolverRegister = handlerMethodArgumentResolverRegister(definitionResolver,modelResolver);
-        SpringHandlerMappingParserComposite parserComposite = parserComposite(definitionResolver,argumentResolverRegister);
+        SpringHandlerMappingParserComposite parserComposite = parserComposite(definitionResolver,modelResolver,argumentResolverRegister,securitySupport);
         return new SpringWebAiaScanner(context,parserComposite,aiaManager);
     }
 

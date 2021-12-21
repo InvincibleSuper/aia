@@ -47,7 +47,9 @@ public class ObjectModelProperty extends ModelProperty{
         if (containerContent != null){
             cloneArray = new ModelProperty[containerContent.length];
             for (int i = 0; i < cloneArray.length; i++) {
-                cloneArray[i] = containerContent[i].clone();
+                if (containerContent[i]!=null){
+                    cloneArray[i] = containerContent[i].clone();
+                }
             }
         }
         Model cloneModel = getModel() == null?null:getModel().clone();

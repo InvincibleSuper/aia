@@ -39,10 +39,7 @@ public class AiaTemplate {
      */
     private Map<String,String> headers;
 
-    /**
-     * 返回值值处理器
-     */
-    private ReturnValueProcessor processor;
+
 
     /**
      * 下一个模板
@@ -66,10 +63,35 @@ public class AiaTemplate {
 
 
 
-    class TemplateParam{
-        String type;
-        String value;
-        boolean array;
+     class TemplateParam{
+         String type;
+         String value;
+         boolean array;
+         public String getType() {
+             return type;
+         }
+
+         public void setType(String type) {
+             this.type = type;
+         }
+
+         public String getValue() {
+             return value;
+         }
+
+         public void setValue(String value) {
+             this.value = value;
+         }
+
+         public boolean isArray() {
+             return array;
+         }
+
+         public void setArray(boolean array) {
+             this.array = array;
+         }
+
+
 
         public TemplateParam(String type, String value) {
             this.type = type;
@@ -87,15 +109,15 @@ public class AiaTemplate {
     public void addParam(String name,String value,String type){
         if (params == null) {
             params = new LinkedHashMap<>();
-            params.put(name,new TemplateParam(type,value));
         }
+        params.put(name,new TemplateParam(type,value));
     }
 
-    public void addParam(String name,String value,String type,boolean array){
+    public void addParamArray(String name,String value,String type){
         if (params == null) {
             params = new LinkedHashMap<>();
-            params.put(name,new TemplateParam(type,value,array));
         }
+        params.put(name,new TemplateParam(type,value,true));
     }
 
 
@@ -123,13 +145,7 @@ public class AiaTemplate {
         this.url = url;
     }
 
-    public ReturnValueProcessor getProcessor() {
-        return processor;
-    }
 
-    public void setProcessor(ReturnValueProcessor processor) {
-        this.processor = processor;
-    }
 
     public AiaTemplate getNext() {
         return next;

@@ -42,4 +42,10 @@ public class AiaController {
         return res;
     }
 
+
+    @GetMapping("scan")
+    @ResponseBody
+    public boolean scan(){
+        return aiaManager.isScan();
+    }
 }

@@ -8,6 +8,9 @@ import my.jwds.cache.CacheManager;
 import my.jwds.config.AiaConfig;
 import my.jwds.core.AiaApiScanner;
 import my.jwds.core.AiaManager;
+import my.jwds.core.security.QualifiedNameWhiteList;
+import my.jwds.core.security.SecuritySupport;
+import my.jwds.core.security.UrlWhiteList;
 import my.jwds.core.template.AiaTemplateManager;
 import my.jwds.core.model.resolver.ModelResolver;
 import my.jwds.core.plugin.mgt.AiaPluginManager;
@@ -18,9 +21,11 @@ import my.jwds.springweb.parse.RequestMappingHandlerMappingParser;
 import my.jwds.springweb.parse.SpringHandlerMappingParserComposite;
 import my.jwds.springweb.parse.method.*;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 
 import java.util.List;
 
@@ -30,6 +35,7 @@ public class AiaSpringBootConfigure extends AiaSpringWebConfigure {
 
     @Bean
     @ConditionalOnMissingBean
+    @ConfigurationProperties("aia")
     public AiaConfig aiaConfig(){
         return super.aiaConfig();
     }
@@ -107,6 +113,12 @@ public class AiaSpringBootConfigure extends AiaSpringWebConfigure {
         return new RequestParamHandlerMethodArgumentResolver(definitionResolver,modelResolver);
     }
 
+    @Bean
+    @ConditionalOnMissingBean
+    public SecuritySupport aiaSecuritySupport(AiaConfig config){
+        return super.aiaSecuritySupport(config);
+    }
+
 
     @Bean
     @ConditionalOnMissingBean
@@ -120,9 +132,12 @@ public class AiaSpringBootConfigure extends AiaSpringWebConfigure {
 
     @Bean
     @ConditionalOnMissingBean
-    public SpringHandlerMappingParserComposite parserComposite(PriorityDefinitionResolver definitionResolver, HandlerMethodArgumentResolverRegister argumentResolverRegister){
+    public SpringHandlerMappingParserComposite parserComposite(PriorityDefinitionResolver definitionResolver
+            ,ModelResolver modelResolver
+            , HandlerMethodArgumentResolverRegister argumentResolverRegister
+            ,SecuritySupport securitySupport){
         SpringHandlerMappingParserComposite parserComposite = new SpringHandlerMappingParserComposite();
-        parserComposite.addParser(new RequestMappingHandlerMappingParser(definitionResolver,argumentResolverRegister));
+        parserComposite.addParser(new RequestMappingHandlerMappingParser(definitionResolver,modelResolver,argumentResolverRegister,securitySupport));
         return parserComposite;
     }
 
@@ -133,11 +148,5 @@ public class AiaSpringBootConfigure extends AiaSpringWebConfigure {
         return new SpringWebAiaScanner(applicationContext,parserComposite,aiaManager);
     }
 
-    @Bean
-    @ConditionalOnMissingBean
-    public AiaController aiaController(AiaManager aiaManager){
-        AiaController aiaController = new AiaController();
-        aiaController.setAiaManager(aiaManager);
-        return aiaController;
-    }
+
 }

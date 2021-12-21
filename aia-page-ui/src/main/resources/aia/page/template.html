@@ -4,22 +4,29 @@
     <meta charset="UTF-8">
     <title>模板</title>
     <link href="../import/bootstrap/css/bootstrap.min.css" rel="stylesheet"/>
+    <link href="../import/json-viewer/jquery.json-viewer.css" rel="stylesheet"/>
     <link href="../css/template.css" rel="stylesheet"/>
 </head>
 <body>
     <div class="container">
-        <h3 class="name">无说明</h3>
+        <div class="page-header">
+            <h1><span class="method"></span> <small><span class="url-text"></span></small></h1>
+        </div>
+        <h4 class="name">无说明</h4>
         <div class="input-group input-group-lg">
             <span class="input-group-addon method">GET</span>
-            <input  type="text" class="form-control url" disabled  aria-describedby="sizing-addon1" value="/aia/a1">
+            <input  type="text" class="form-control url"  aria-describedby="sizing-addon1" value="/aia/a1">
         </div>
         <div class="header-input">
             <h4 class="header">请求头</h4>
-            <table class="table" >
-                <tbody>
+            <form>
+                <table class="table" >
+                    <tbody>
 
-                </tbody>
-            </table>
+                    </tbody>
+                </table>
+            </form>
+
         </div>
         <div class="param-input">
             <h4 class="header">请求参数</h4>
@@ -30,13 +37,24 @@
             </table>
         </div>
         <button type="button" class="btn btn-success send-request" style="margin-top: 20px;">发送请求</button>
-
-        <div class="panel panel-success" style="margin-top: 20px">
+        <div class="alert alert-success response-status" role="alert" style="display: none;margin-top: 20px"></div>
+        <div class="panel panel-default response-panel" >
             <div class="panel-heading">
                 <h2 class="panel-title">返回值</h2>
+                <div class="dropdown response-type-div">
+                    <button class="btn btn-default dropdown-toggle response-type-btn" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                        <span class="response-type-btn-text">TEXT</span>
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu " aria-labelledby="dropdownMenu1">
+                        <li class="response-type-option"><a>TEXT</a></li>
+                        <li class="response-type-option"><a>JSON</a></li>
+                        <li class="response-type-option"><a>HTML</a></li>
+                    </ul>
+                </div>
             </div>
             <div class="panel-body">
-                Panel content
+                <div class="response-value" id="response-value"></div>
             </div>
         </div>
 
@@ -44,5 +62,7 @@
 </body>
 <script src="../import/jquery/jquery-3.6.0.min.js"></script>
 <script src="../import/bootstrap/js/bootstrap.min.js"></script>
+<script src="../import/validator/jquery.validate.min.js"></script>
+<script src="../import/json-viewer/jquery.json-viewer.js"></script>
 <script src="../js/template.js"></script>
 </html>

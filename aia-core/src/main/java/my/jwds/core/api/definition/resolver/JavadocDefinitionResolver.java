@@ -58,9 +58,6 @@ public class JavadocDefinitionResolver extends AbstractDefinitionResolver{
                     javaPath});
             ClassDoc classDoc =  docs.get(clz);
             resolveNowAndInnerClassDefinition(clz,classDoc);
-        }else{
-            ClassDefinition classDefinition = new ClassDefinition(clz,new HashMap<>(),new HashMap<>(),null);
-            cache.put(clz,classDefinition);
         }
     }
 

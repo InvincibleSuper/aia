@@ -14,8 +14,10 @@ import java.util.*;
 public class DefaultModelResolver implements ModelResolver<Type>{
 
     private static final Map<Class,Object> special = new HashMap<>();
+    private static final ObjectModelProperty OBJECT_MODEL_PROPERTY = new ObjectModelProperty("object",Object.class.getTypeName(),null,new Model());
     private Map<Type,Model> cache = new HashMap<>();
     private DefinitionResolver definitionResolver;
+
     static{
         Date NOW = new Date();
         String NOW_TIME = new SimpleDateFormat("hh:mm:ss").format(NOW);
@@ -45,11 +47,12 @@ public class DefaultModelResolver implements ModelResolver<Type>{
         special.put(LocalDate.class,new StringModelProperty(null,LocalDate.class.getTypeName(), NOW_DATE ));
         special.put(LocalTime.class,new StringModelProperty(null,LocalTime.class.getTypeName(), NOW_TIME ));
         special.put(LocalDateTime.class,new StringModelProperty(null,LocalDateTime.class.getTypeName(), NOW_DATE_TIME ));
-        special.put(Map.class,new ObjectModelProperty(null,Map.class.getTypeName()));
-        LinkedHashMap<Class,Object> collection = new LinkedHashMap<>();
-        collection.put(List.class,new ArrayModelProperty(null,List.class.getTypeName()));
-        collection.put(Set.class,new ArrayModelProperty(null,Set.class.getTypeName()));
-        special.put(Collection.class,collection);
+        ModelProperty key = ((ModelProperty) special.get(String.class)).clone();
+        key.setName("key");
+        ModelProperty value = OBJECT_MODEL_PROPERTY.clone();
+        value.setName("value");
+        special.put(Map.class,new ObjectModelProperty(null,Map.class.getTypeName(),new ModelProperty[]{key,value},null));
+        special.put(Collection.class,new ArrayModelProperty(null,Collection.class.getTypeName()));
     }
 
     public DefaultModelResolver(DefinitionResolver definitionResolver) {
@@ -64,7 +67,7 @@ public class DefaultModelResolver implements ModelResolver<Type>{
         }else{
             resolveInfo = new ModelPropertyResolveInfo();
             resolveInfo.setType(type);
-            resolveInfo.setName(type.getTypeName());
+            resolveInfo.setName("object");
         }
         Type origin = resolveInfo.getOrigin() == null ? resolveInfo.getType():resolveInfo.getOrigin();
         GenericDeclaration declaration = resolveInfo.getDefinition() == null ? getRawClass(resolveInfo.getType()) : resolveInfo.getDefinition();
@@ -77,7 +80,7 @@ public class DefaultModelResolver implements ModelResolver<Type>{
         if (set.contains(clz))return new Model();
         set.add(clz);
         Set<String> fieldProcessCache = new HashSet<>();
-        List<ModelProperty>  properties = new ArrayList<>();
+        List<ModelProperty> properties = new ArrayList<>();
         Map<Field, FieldDefinition> propertyMap = definitionResolver.resolveField(clz);
         for (FieldDefinition fieldDefinition : propertyMap.values()) {
             Field field = fieldDefinition.getField();
@@ -114,7 +117,7 @@ public class DefaultModelResolver implements ModelResolver<Type>{
 
 
     protected ModelProperty resolveClass(Class clz,String name,Type origin,Set set){
-        ModelProperty now  = resolveSpecial(clz,name);
+        ModelProperty now  = resolveSpecial(clz,clz,name);
         if (now == null){
             now = new ObjectModelProperty(name,clz.getTypeName(),null,resolveModel(clz,set));
         }else if (now instanceof ArrayModelProperty){
@@ -175,7 +178,7 @@ public class DefaultModelResolver implements ModelResolver<Type>{
 
     protected ModelProperty resolveParameterType(ParameterizedType type,String name,Type origin,GenericDeclaration definition,Set set){
         Class clz = (Class) type.getRawType();
-        ModelProperty now  = resolveSpecial(clz,name);
+        ModelProperty now  = resolveSpecial(clz,type,name);
         if (now == null){
             now = new ObjectModelProperty(name,clz.getTypeName(),null,resolveModel(type,set));
         }else if (now instanceof ObjectModelProperty){
@@ -201,34 +204,42 @@ public class DefaultModelResolver implements ModelResolver<Type>{
 
 
 
-    protected ModelProperty resolveSpecial(Class clz){
-        return resolveSpecial(clz,null);
-    }
-    protected ModelProperty resolveSpecial(Class clz,String name){
+
+    protected ModelProperty resolveSpecial(Class clz,Type type,String name){
         if (clz.isArray()){
-            return new ArrayModelProperty(name,clz.getTypeName());
+            return new ArrayModelProperty(name,type.toString());
+        }else if (clz == Object.class){
+            ObjectModelProperty objectModelProperty = OBJECT_MODEL_PROPERTY.clone();
+            objectModelProperty.setName(name);
+            return objectModelProperty;
         }
         Object o = special;
-        while(o != null && o instanceof Map){
-            Map<Class,Object> searchMap = (Map<Class, Object>) o;
-            o = searchMap.get(clz);
-            if (o == null){
-                for (Class aClass : searchMap.keySet()) {
-                    if (aClass.isAssignableFrom(clz)){
-                        o = searchMap.get(aClass);
-                        break;
+        while(o != null){
+            if (o instanceof Map){
+                Map<Class,Object> searchMap = (Map<Class, Object>) o;
+                o = searchMap.get(clz);
+                if (o == null){
+                    for (Class aClass : searchMap.keySet()) {
+                        if (aClass.isAssignableFrom(clz)){
+                            o = searchMap.get(aClass);
+                            break;
+                        }
                     }
                 }
+            }else{
+                ModelProperty template =  ((ModelProperty)o);
+                ModelProperty res = template.clone();
+                res.setName(name);
+                res.setType(type.toString());
+                return res;
             }
+
         }
-        if (o!= null){
-            ModelProperty template =  ((ModelProperty)o);
-            ModelProperty res = template.clone();
-            res.setName(name);
-            return res;
-        }
+
         return null;
     }
+
+
 
 
 }

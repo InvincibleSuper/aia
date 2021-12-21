@@ -21,8 +21,18 @@ public class InvokeApi extends InvokeDefinition {
     private Map<String,String> headers;
 
 
+    private InvokerReturnValue returnValue;
+
+
     private String group;
 
+    public InvokerReturnValue getReturnValue() {
+        return returnValue;
+    }
+
+    public void setReturnValue(InvokerReturnValue returnValue) {
+        this.returnValue = returnValue;
+    }
 
     public Map<String, String> getHeaders() {
         return headers;

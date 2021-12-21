@@ -78,3 +78,30 @@ body {
     cursor:pointer;
     background: #eeeeee;
 }
+
+body{
+    height: 100%;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+}
+
+/*
+ * 巨幕动画
+ */
+@keyframes refresh
+{
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.glyphicon-refresh{
+    animation-name: refresh;
+    animation-duration: 3s;
+    animation-iteration-count: infinite;
+}

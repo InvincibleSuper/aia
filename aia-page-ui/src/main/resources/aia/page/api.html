@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <link href="../import/bootstrap/css/bootstrap.min.css" rel="stylesheet"/>
+    <link href="../import/json-viewer/jquery.json-viewer.css" rel="stylesheet"/>
     <link href="../css/api.css" rel="stylesheet"/>
 </head>
 <body>
@@ -35,7 +36,7 @@
               <tr>
                   <th>名称</th>
                   <th>参数类型</th>
-                  <th>默认值</th>
+                  <th>java Class</th>
                   <th>说明</th>
               </tr>
               </thead>
@@ -46,9 +47,31 @@
 
           </table>
       </div>
+      <div class="panel panel-warning">
+          <div class="panel-heading"><h4>返回值</h4> </div>
+          <table class="table">
+              <thead>
+              <tr>
+                  <th>名称</th>
+                  <th>java Class</th>
+                  <th>说明</th>
+              </tr>
+              </thead>
+              <tbody class="return-table">
+
+              </tbody>
+          </table>
+      </div>
+      <div class="panel panel-danger">
+          <div class="panel-heading"><h4>返回值示例</h4> </div>
+          <div class="return-example">
+              示例
+          </div>
+      </div>
   </div>
 </body>
 <script src="../import/jquery/jquery-3.6.0.min.js"></script>
 <script src="../import/bootstrap/js/bootstrap.min.js"></script>
+<script src="../import/json-viewer/jquery.json-viewer.js"></script>
 <script src="../js/api.js"></script>
 </html>

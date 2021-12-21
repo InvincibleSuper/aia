@@ -8,6 +8,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public abstract class AbstractDefinitionResolver implements DefinitionResolver{
@@ -25,6 +26,21 @@ public abstract class AbstractDefinitionResolver implements DefinitionResolver{
      */
     protected void initDefinition(Class clz){
         if (cache.get(clz) == null)doInitDefinition(clz);
+        if (cache.get(clz) == null){
+            Map<Field,FieldDefinition> fieldDefinitionMap = new LinkedHashMap<>();
+            Map<Method,MethodDefinition> methodDefinitionMap = new LinkedHashMap<>();
+            Class now = clz;
+            while(now!=null){
+                for (Field field : clz.getDeclaredFields()) {
+                    fieldDefinitionMap.put(field,new FieldDefinition(field,null));
+                }
+                for (Method method : clz.getDeclaredMethods()) {
+                    methodDefinitionMap.put(method,new MethodDefinition(method,null,null,new String[method.getParameterCount()]));
+                }
+                now = now.getSuperclass();
+            }
+            cache.put(clz,new ClassDefinition(clz,methodDefinitionMap,fieldDefinitionMap,null));
+        }
     }
 
     protected abstract void doInitDefinition(Class clz);
@@ -70,6 +86,29 @@ public abstract class AbstractDefinitionResolver implements DefinitionResolver{
         return cache;
     }
 
+    /**
+     * 解析属性注释
+     *
+     * @param clz   解析的类
+     * @param field
+     * @return 属性和属性注释的键值对
+     */
+    @Override
+    public FieldDefinition resolveField(Class clz, Field field) {
+        return resolveField(clz).get(field);
+    }
+
+    /**
+     * 解析方法注释
+     *
+     * @param clz    解析类
+     * @param method
+     * @return 方法和方法注释的键值对
+     */
+    @Override
+    public MethodDefinition resolveMethod(Class clz, Method method) {
+        return resolveMethod(clz).get(method);
+    }
 
     /**
      * 返回类注释

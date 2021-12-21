@@ -1,10 +1,15 @@
 package my.jwds.core.template;
 
+import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.JSONPObject;
+import jdk.nashorn.internal.parser.JSONParser;
 import my.jwds.core.AiaManager;
 import my.jwds.core.api.InvokeApi;
 import my.jwds.core.api.InvokeContentType;
 import my.jwds.core.api.InvokeParam;
 import my.jwds.core.model.*;
+import my.jwds.utils.ModelUtils;
+import my.jwds.utils.StringUtils;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -27,7 +32,7 @@ public class DefaultTemplateGenerator implements TemplateGenerator{
             for (InvokeApi invokeApi : apis) {
                 AiaTemplate template = new AiaTemplate();
                 template.setUrl(invokeApi.getUrl());
-                template.setName(invokeApi.getUrl().getUrl());
+                template.setName(resolveName(invokeApi));
                 template.setGroup(group);
                 generateParams(invokeApi.getParams(),template);
                 generateHeader(invokeApi.getHeaders(), template);
@@ -64,21 +69,25 @@ public class DefaultTemplateGenerator implements TemplateGenerator{
             if (thisModel.getContainerContent() == null){
                 for (ModelProperty property : thisModel.getModel().getProperties()) {
                     if (property instanceof SimpleModelProperty){
-                        template.addParam(prefix+ param.getName(), ((SimpleModelProperty)property).getValue().toString(),param.getContentType());
+                        template.addParam(prefix+ property.getName(), ((SimpleModelProperty)property).getValue().toString(),param.getContentType());
                     }
                 }
             }
         }else{
             ArrayModelProperty thisModel = (ArrayModelProperty) modelProperty;
             if (thisModel.getComponent() instanceof SimpleModelProperty){
-                template.addParam(prefix+param.getName(), ((SimpleModelProperty)thisModel.getComponent()).getValue().toString(),param.getContentType());
+                template.addParamArray(prefix+param.getName(), ((SimpleModelProperty)thisModel.getComponent()).getValue().toString(),param.getContentType());
             }
         }
 
     }
     protected void processJson(InvokeParam param,AiaTemplate template){
-
+        Object model = ModelUtils.toMap(param.getModel());
+        String value = JSONObject.toJSONString(model,true);
+        template.addParam(param.getName(), value, param.getContentType() );
     }
+
+
     protected void processUrl(InvokeParam param,AiaTemplate template){
         template.addParam(param.getName(),param.getName(), param.getContentType());
     }
@@ -92,5 +101,19 @@ public class DefaultTemplateGenerator implements TemplateGenerator{
             cloneHeaders.put(entry.getKey(),entry.getValue());
         }
         template.setHeaders(cloneHeaders);
+    }
+
+
+
+    protected String resolveName(InvokeApi invokeApi){
+        String desc = invokeApi.getDefinition();
+        if (!StringUtils.hasText(desc)){
+            return invokeApi.getUrl().getUrl();
+        }
+        int brIndex = desc.indexOf("\n");
+        if (brIndex == -1){
+            return desc;
+        }
+        return desc.substring(0,brIndex);
     }
 }

@@ -1,18 +1,17 @@
 package my.jwds.springboot.samples.controller;
 
 
-import my.jwds.core.AiaApiScanner;
 import my.jwds.springboot.samples.entity.User;
 import my.jwds.springweb.data.AiaController;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
+/**
+ * 测试接口
+ * aia测试
+ */
 @Controller
 @RequestMapping("aia")
 public class TestController {
@@ -30,14 +29,33 @@ public class TestController {
     }
 
     @PostMapping(path = "/r2")
-    public String r2(User[] user){
-        new User();
-        return "index";
+    @ResponseBody
+    public User r2(@RequestBody User user){
+
+        return  new User();
     }
 
-
+    /**
+     * 请求3
+     * 作为测试使用
+     * @param user
+     * @param user1
+     * @return
+     */
     @GetMapping(path = "/r3")
     public String r3(User user,User user1){
         return "index";
+    }
+
+    /**
+     * 请求4
+     * 作为测试使用
+     * @param user 用户名
+     * @return 用户信息
+     */
+    @GetMapping(path = "/r4/{user}")
+    @ResponseBody
+    public String r4(@PathVariable("user") String user){
+        return user;
     }
 }

@@ -15,7 +15,9 @@ public class ModelProperty {
      */
     private String type;
 
-
+    /**
+     * 注释
+     */
     private String definition;
 
 

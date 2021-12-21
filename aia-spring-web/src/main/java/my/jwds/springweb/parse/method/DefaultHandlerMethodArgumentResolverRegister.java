@@ -1,6 +1,7 @@
 package my.jwds.springweb.parse.method;
 
 import org.springframework.core.MethodParameter;
+import org.springframework.core.OrderComparator;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -17,9 +18,7 @@ public class DefaultHandlerMethodArgumentResolverRegister implements HandlerMeth
     private List<HandlerMethodArgumentResolver> registerContents = new ArrayList<>();
 
 
-    private Comparator<HandlerMethodArgumentResolver> comparator = (HandlerMethodArgumentResolver a1,HandlerMethodArgumentResolver a2) ->{
-        return a2.getOrder() - a1.getOrder();
-    };
+    private Comparator comparator = new OrderComparator();
 
 
     /**

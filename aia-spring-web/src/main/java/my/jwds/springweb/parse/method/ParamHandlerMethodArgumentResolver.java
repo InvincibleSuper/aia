@@ -9,6 +9,8 @@ import my.jwds.core.model.resolver.ModelResolver;
 import org.springframework.core.DefaultParameterNameDiscoverer;
 import org.springframework.core.MethodParameter;
 import org.springframework.core.ParameterNameDiscoverer;
+import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
+import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
 /**
  * 处理方法参数解析类，解析为param类型的参数，默认的兜底解析器
@@ -19,7 +21,6 @@ public class ParamHandlerMethodArgumentResolver implements HandlerMethodArgument
 
 
     private DefinitionResolver definitionResolver;
-
 
     private ModelResolver modelResolver;
 
@@ -102,7 +103,7 @@ public class ParamHandlerMethodArgumentResolver implements HandlerMethodArgument
     @Override
     public InvokeParam resolve(MethodParameter parameter) {
         InvokeParam invokeParam = new InvokeParam();
-        invokeParam.setContentType(resolveContentType(parameter).name());
+        invokeParam.setContentType(resolveContentType(parameter));
         invokeParam.setDefinition(resolveDefinition(parameter));
         invokeParam.setModel(resolveModel(parameter));
         invokeParam.setPrefix(resolvePrefix(parameter));

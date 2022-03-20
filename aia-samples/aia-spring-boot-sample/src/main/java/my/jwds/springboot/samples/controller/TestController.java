@@ -5,6 +5,7 @@ import my.jwds.springboot.samples.entity.User;
 import my.jwds.springweb.data.AiaController;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 
@@ -32,7 +33,7 @@ public class TestController {
     @ResponseBody
     public User r2(@RequestBody User user){
 
-        return  new User();
+        return  user;
     }
 
     /**
@@ -57,5 +58,17 @@ public class TestController {
     @ResponseBody
     public String r4(@PathVariable("user") String user){
         return user;
+    }
+
+
+    /**
+     * 文件上传
+     * 作为测试使用
+     * @return 用户信息
+     */
+    @PostMapping(path = "/fileUp")
+    @ResponseBody
+    public Object fileUp(MultipartFile file){
+        return file;
     }
 }

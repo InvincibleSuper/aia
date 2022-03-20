@@ -13,16 +13,31 @@ public class NumberModelProperty extends SimpleModelProperty{
         this.value = value;
     }
 
-    public NumberModelProperty(String name, String type, Number value) {
-        super(name, type);
-        this.value = value;
-    }
+
 
     public NumberModelProperty() {
 
     }
+
+    public NumberModelProperty(String name,Class javaType, Number value) {
+        super(name,javaType);
+        this.value = value;
+    }
+
+
+    public NumberModelProperty(String name, String type, Class javaType, Number value) {
+        super(name, type, javaType);
+        this.value = value;
+    }
+
     public NumberModelProperty clone(){
-        return new NumberModelProperty(getName(),getType(),getValue());
+        NumberModelProperty modelProperty = new NumberModelProperty();
+        modelProperty.setName(getName());
+        modelProperty.setType(getType());
+        modelProperty.setJavaType(getJavaType());
+        modelProperty.setDefinition(getDefinition());
+        modelProperty.setValue(getValue());
+        return modelProperty;
     }
 
 

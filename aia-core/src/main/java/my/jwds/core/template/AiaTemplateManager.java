@@ -2,6 +2,7 @@ package my.jwds.core.template;
 
 import my.jwds.core.api.InvokeUrl;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -42,5 +43,9 @@ public interface AiaTemplateManager {
     Map<InvokeUrl,AiaTemplate> getGroupTemplate(String group);
 
 
-
+    /**
+     * 获取组对应模板map
+     * @return
+     */
+    Map<String, List<AiaTemplate>> getGroupTemplateMap();
 }

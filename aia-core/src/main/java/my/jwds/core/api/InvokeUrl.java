@@ -1,5 +1,7 @@
 package my.jwds.core.api;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -10,6 +12,8 @@ public class InvokeUrl extends InvokeDefinition {
     private String method;
 
     private String url;
+
+    private List<String> accessUrls;
 
 
     public String getMethod() {
@@ -28,17 +32,28 @@ public class InvokeUrl extends InvokeDefinition {
         this.url = url;
     }
 
-    public InvokeUrl(String definition, String method, String url) {
-        super(definition);
-        this.method = method;
-        this.url = url;
+    public List<String> getAccessUrls() {
+        return accessUrls;
+    }
+
+    public void setAccessUrls(List<String> accessUrls) {
+        this.accessUrls = accessUrls;
     }
 
     public InvokeUrl() {
     }
 
+    public InvokeUrl(String definition, String method, String url, List<String> accessUrls) {
+        super(definition);
+        this.method = method;
+        this.url = url;
+        this.accessUrls = accessUrls;
+    }
+
     public InvokeUrl clone(){
-        return new InvokeUrl(getDefinition(),getMethod(),getUrl());
+        List<String> cloneHosts = null;
+        if (getAccessUrls() != null)cloneHosts = new ArrayList<>(getAccessUrls());
+        return new InvokeUrl(getDefinition(),getMethod(),getUrl(),cloneHosts);
     }
 
     @Override

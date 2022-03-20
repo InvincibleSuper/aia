@@ -227,4 +227,10 @@ public class AiaManager implements AiaTemplateManager, AiaPluginManager, AiaApiM
     public void setScan(boolean scan) {
         this.scan = scan;
     }
+
+
+    @Override
+    public Map<String, List<AiaTemplate>> getGroupTemplateMap() {
+        return templateManager.getGroupTemplateMap();
+    }
 }

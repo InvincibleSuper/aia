@@ -10,27 +10,39 @@ public class ModelProperty {
      * 名称
      */
     private String name;
-    /**
-     * 类型
-     */
-    private String type;
 
     /**
      * 注释
      */
     private String definition;
 
+    /**
+     * java类型
+     */
+    private Class javaType;
 
-    public String getName() {
-        return name;
-    }
 
     /**
-     * 设置名称
-     * @param name 名称
+     * 通用类型说明
      */
-    public void setName(String name) {
+    private String type;
+
+
+
+    public ModelProperty() { }
+    public ModelProperty(String name, Class javaType) {
+        this(name,javaType,null);
+    }
+    public ModelProperty(String name,Class javaType, String definition) {
         this.name = name;
+        this.definition = definition;
+        this.javaType = javaType;
+    }
+
+    public ModelProperty(String name, String type, Class javaType) {
+        this.name = name;
+        this.javaType = javaType;
+        this.type = type;
     }
 
     public String getType() {
@@ -41,24 +53,13 @@ public class ModelProperty {
         this.type = type;
     }
 
-
-
-    public ModelProperty(String name, String type) {
-        this.name = name;
-        this.type = type;
-    }
-
-    public ModelProperty() {
-    }
-
-    public ModelProperty(String name, String type, String definition) {
-        this.name = name;
-        this.type = type;
-        this.definition = definition;
-    }
-
     public ModelProperty clone(){
-        return new ModelProperty(name,type,definition);
+        ModelProperty modelProperty = new ModelProperty();
+        modelProperty.setName(getName());
+        modelProperty.setType(getType());
+        modelProperty.setJavaType(getJavaType());
+        modelProperty.setDefinition(getDefinition());
+        return modelProperty;
     }
 
     public String getDefinition() {
@@ -68,4 +69,22 @@ public class ModelProperty {
     public void setDefinition(String definition) {
         this.definition = definition;
     }
+
+    public Class getJavaType() {
+        return javaType;
+    }
+
+    public void setJavaType(Class javaType) {
+        this.javaType = javaType;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+
 }

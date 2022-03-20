@@ -29,12 +29,13 @@ function isScan(){
     }else{
         $('.jumbotron').show();
     }
+    return isScan;
 }
 
 function scanFlag(){
     var res = false;
     $.ajax({
-        url: '/aia/info/scan',
+        url: 'info/scan',
         async:false,
         success: function (data){
             res = data;
@@ -224,7 +225,7 @@ function invokeInit(){
 function getFrameHtml(unique,url){
 
 
-    var frameHtml ='<iframe class="embed-responsive-item invoke-content-item" src="page/'+pageType+'.html?url='+url+'" unique="'+unique+'"></iframe>';
+    var frameHtml ='<iframe class="embed-responsive-item invoke-content-item" src="page/'+pageType+'.html" unique="'+unique+'"></iframe>';
     return frameHtml;
 }
 

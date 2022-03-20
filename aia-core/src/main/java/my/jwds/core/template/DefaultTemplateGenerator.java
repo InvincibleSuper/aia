@@ -47,13 +47,13 @@ public class DefaultTemplateGenerator implements TemplateGenerator{
             template.setParams(new LinkedHashMap<>());
         }
         for (InvokeParam param : params) {
-            if (param.getContentType().equals(InvokeContentType.param.name())){
+            if (param.getContentType() == InvokeContentType.param){
                 processParam(param,template);
-            }else if (param.getContentType().equals(InvokeContentType.json.name())){
+            }else if (param.getContentType() == InvokeContentType.json){
                 processJson(param,template);
-            }else if (param.getContentType().equals(InvokeContentType.url.name())){
+            }else if (param.getContentType() == InvokeContentType.url){
                 processUrl(param,template);
-            }else if (param.getContentType().equals(InvokeContentType.file.name())){
+            }else if (param.getContentType() == InvokeContentType.file){
                 processFile(param,template);
             }
         }
@@ -63,20 +63,20 @@ public class DefaultTemplateGenerator implements TemplateGenerator{
         String prefix = param.getPrefix()==null? "": param.getPrefix()+".";
         ModelProperty modelProperty = param.getModel();
         if (modelProperty instanceof SimpleModelProperty){
-            template.addParam(prefix+ param.getName(), ((SimpleModelProperty)modelProperty).getValue().toString(),param.getContentType());
+            template.addParam(prefix+ param.getName(), ((SimpleModelProperty)modelProperty).getValue().toString(),param.getContentType().name());
         }else if (modelProperty instanceof ObjectModelProperty){
             ObjectModelProperty thisModel = (ObjectModelProperty) modelProperty;
             if (thisModel.getContainerContent() == null){
                 for (ModelProperty property : thisModel.getModel().getProperties()) {
                     if (property instanceof SimpleModelProperty){
-                        template.addParam(prefix+ property.getName(), ((SimpleModelProperty)property).getValue().toString(),param.getContentType());
+                        template.addParam(prefix+ property.getName(), ((SimpleModelProperty)property).getValue().toString(),param.getContentType().name());
                     }
                 }
             }
         }else{
             ArrayModelProperty thisModel = (ArrayModelProperty) modelProperty;
             if (thisModel.getComponent() instanceof SimpleModelProperty){
-                template.addParamArray(prefix+param.getName(), ((SimpleModelProperty)thisModel.getComponent()).getValue().toString(),param.getContentType());
+                template.addParamArray(prefix+param.getName(), ((SimpleModelProperty)thisModel.getComponent()).getValue().toString(),param.getContentType().name());
             }
         }
 
@@ -84,15 +84,15 @@ public class DefaultTemplateGenerator implements TemplateGenerator{
     protected void processJson(InvokeParam param,AiaTemplate template){
         Object model = ModelUtils.toMap(param.getModel());
         String value = JSONObject.toJSONString(model,true);
-        template.addParam(param.getName(), value, param.getContentType() );
+        template.addParam(param.getName(), value, param.getContentType().name() );
     }
 
 
     protected void processUrl(InvokeParam param,AiaTemplate template){
-        template.addParam(param.getName(),param.getName(), param.getContentType());
+        template.addParam(param.getName(),param.getName(), param.getContentType().name());
     }
     protected void processFile(InvokeParam param,AiaTemplate template){
-        template.addParam(param.getName(),null, param.getContentType());
+        template.addParam(param.getName(),null, param.getContentType().name());
     }
 
     protected void generateHeader(Map<String,String> headers,AiaTemplate template){

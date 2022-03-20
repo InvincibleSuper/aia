@@ -4,15 +4,15 @@ import my.jwds.core.api.InvokeContentType;
 import my.jwds.core.api.definition.resolver.DefinitionResolver;
 import my.jwds.core.model.resolver.ModelResolver;
 import org.springframework.core.MethodParameter;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PathVariable;
+
+public class PathVariableHandlerMethodArgumentResolver extends ParamHandlerMethodArgumentResolver{
 
 
-public class RequestBodyHandlerMethodArgumentResolver extends ParamHandlerMethodArgumentResolver {
-
-
-    public RequestBodyHandlerMethodArgumentResolver(DefinitionResolver definitionResolver, ModelResolver modelResolver) {
+    public PathVariableHandlerMethodArgumentResolver(DefinitionResolver definitionResolver, ModelResolver modelResolver) {
         super(definitionResolver, modelResolver);
     }
+
 
     /**
      * 能解析吗
@@ -22,7 +22,7 @@ public class RequestBodyHandlerMethodArgumentResolver extends ParamHandlerMethod
      */
     @Override
     public boolean canResolve(MethodParameter parameter) {
-        return parameter.getParameterAnnotation(RequestBody.class) != null;
+        return parameter.getParameterAnnotation(PathVariable.class) != null;
     }
 
     /**
@@ -31,12 +31,19 @@ public class RequestBodyHandlerMethodArgumentResolver extends ParamHandlerMethod
      * @return 参数类别
      */
     protected InvokeContentType resolveContentType(MethodParameter parameter){
-        return InvokeContentType.json;
+        return InvokeContentType.url;
     }
 
 
-
-
+    /**
+     * 解析方法参数注释
+     * @param parameter 方法参数
+     * @return 方法参数注释
+     */
+    protected String resolveArgumentName(MethodParameter parameter){
+        PathVariable pathVariable = parameter.getParameterAnnotation(PathVariable.class);
+        return pathVariable.name();
+    }
 
     @Override
     public int getOrder() {

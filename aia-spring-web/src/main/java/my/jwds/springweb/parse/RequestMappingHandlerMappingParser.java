@@ -1,10 +1,7 @@
 package my.jwds.springweb.parse;
 
 import com.alibaba.fastjson.JSONObject;
-import my.jwds.core.api.InvokeApi;
-import my.jwds.core.api.InvokeParam;
-import my.jwds.core.api.InvokeUrl;
-import my.jwds.core.api.InvokerReturnValue;
+import my.jwds.core.api.*;
 import my.jwds.core.api.definition.MethodDefinition;
 import my.jwds.core.api.definition.resolver.DefinitionResolver;
 import my.jwds.core.AiaManager;
@@ -13,6 +10,7 @@ import my.jwds.core.model.resolver.ModelResolver;
 import my.jwds.core.security.SecuritySupport;
 import my.jwds.springweb.parse.method.HandlerMethodArgumentResolver;
 import my.jwds.springweb.parse.method.HandlerMethodArgumentResolverRegister;
+import my.jwds.springweb.utils.ContentTypeTable;
 import my.jwds.utils.MethodUtils;
 import my.jwds.utils.ModelUtils;
 import my.jwds.utils.StringUtils;
@@ -74,7 +72,7 @@ public class RequestMappingHandlerMappingParser extends AbstractHandlerMappingPa
     @Override
     protected void onParse(AiaManager aiaManager,  HandlerMapping handlerMapping) {
         RequestMappingHandlerMapping r = (RequestMappingHandlerMapping) handlerMapping;
-        Map<RequestMappingInfo, HandlerMethod> handlerMethods  = r.getHandlerMethods();
+        Map<RequestMappingInfo, HandlerMethod> handlerMethods = r.getHandlerMethods();
         List<InvokeApi> result = new ArrayList<>();
         handlerMethods.forEach((requestMappingInfo, handlerMethod) -> {
             result.addAll(createInvokeApi(requestMappingInfo,handlerMethod));
@@ -92,6 +90,7 @@ public class RequestMappingHandlerMappingParser extends AbstractHandlerMappingPa
         InvokerReturnValue returnValue = resolverReturn(handlerMethod);
         ArrayList<InvokeParam> invokeParams = createInvokeParam(handlerMethod);
         LinkedHashMap<String,String> headers = resolveHeader(requestMappingInfo);
+        ensureContentType(headers,invokeParams,requestMappingInfo);
         List<InvokeApi> result = new ArrayList<>();
         for (InvokeUrl invokeUrl : invokeUrls) {
             if (securitySupport.urlInclude(invokeUrl.getUrl())){
@@ -108,9 +107,41 @@ public class RequestMappingHandlerMappingParser extends AbstractHandlerMappingPa
         return result;
     }
 
+
+    protected void ensureContentType(LinkedHashMap<String,String> headers,ArrayList<InvokeParam> invokeParams,RequestMappingInfo requestMappingInfo){
+        InvokeContentType max = InvokeContentType.url;
+        for (InvokeParam param : invokeParams) {
+            if (param.getContentType().getOrder() >max.getOrder()){
+                max = param.getContentType();
+            }
+        }
+        Set<MediaType> producesMediaType = requestMappingInfo.getProducesCondition().getProducibleMediaTypes();
+        MediaType contentType = null;
+        MediaType[] optionalMediaType = ContentTypeTable.find(max);
+
+        if ((producesMediaType == null || producesMediaType.isEmpty()) && optionalMediaType != null ){
+            contentType = optionalMediaType[0];
+        }else if (optionalMediaType == null){
+            contentType = MediaType.APPLICATION_FORM_URLENCODED;
+        }else{
+            for (MediaType mediaType : optionalMediaType) {
+                if (producesMediaType.contains(mediaType)){
+                    contentType = mediaType;
+                    break;
+                }
+            }
+        }
+        if (contentType == null){
+            headers.put("Content-Type","no-support");
+        }else{
+            headers.put("Content-Type",contentType.toString());
+        }
+
+    }
+
     protected ArrayList<InvokeUrl> createInvokeUrl(RequestMappingInfo requestMappingInfo){
         ArrayList<InvokeUrl> res = new ArrayList<>();
-        Set<String> paths = requestMappingInfo.getDirectPaths();
+        Set<String> paths = requestMappingInfo.getPatternValues();
         for (String path : paths) {
             for (RequestMethod method : requestMappingInfo.getMethodsCondition().getMethods()) {
                 InvokeUrl invokeUrl = new InvokeUrl();
@@ -143,14 +174,7 @@ public class RequestMappingHandlerMappingParser extends AbstractHandlerMappingPa
         for (NameValueExpression<String> expression : requestMappingInfo.getHeadersCondition().getExpressions()) {
             headers.put(expression.getName(),expression.getValue());
         }
-        StringBuilder producerMediaType = new StringBuilder();
-        for (MediaType mediaType : requestMappingInfo.getProducesCondition().getProducibleMediaTypes()) {
-            producerMediaType.append(mediaType.getType());
-            producerMediaType.append(",");
-        }
-        if (producerMediaType.length() != 0){
-            headers.put("Content-Type",producerMediaType.substring(0,producerMediaType.length()-1));
-        }
+
         return headers;
     }
 

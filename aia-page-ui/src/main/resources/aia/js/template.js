@@ -1,9 +1,8 @@
 var info = parent.chooseInfo
-var isMultipart = false;
-var excludeHeaders = {
-    "Content-Type":processContentType
-}
-initTemplate()
+var filterHeaders ;
+var contentGenericReq;
+var baseUrl = null;
+
 function initTemplate(){
     $(".name").text(info.name)
     var url = info.url;
@@ -14,6 +13,7 @@ function initTemplate(){
     processParam(info.params);
     $('.send-request').click(sendReq)
     $('.response-type-option').click(resTypeClick)
+    baseUrl = location.href.substring(0,location.href.lastIndexOf("/aia"))
 }
 
 function processHeaders(headers){
@@ -42,9 +42,9 @@ function processHeaders(headers){
 }
 
 function filterHeader(headerName,headerValue){
-    for (let excludeHeader of Object.keys(excludeHeaders)) {
+    for (let excludeHeader of Object.keys(filterHeaders)) {
         if (headerName.toLowerCase() == excludeHeader.toLowerCase()){
-            excludeHeaders[excludeHeaders](headerValue);
+            filterHeaders[excludeHeader](headerValue);
             return true;
         }
     }
@@ -60,14 +60,14 @@ function processParam(params){
             var content = "";
             var param = params[paramName]
             param['name'] = paramName
-            if (isMultipart){
-                content = processMultipartParam(param)
+            if (param.type == 'file'){
+                content = processFileParam(param)
             }else if (param.type == 'param'){
                 content = processDefaultParam(param)
             }else if (param.type == 'json'){
                 content = processJsonParam(param)
             }else if (param.type == 'url'){
-                content = processMultipartParam(param)
+                content = processDefaultParam(param)
             }
             paramBody.append(content)
         }
@@ -88,16 +88,14 @@ function processJsonParam(param){
         '<td class="param-value"><textarea  class="form-control" >'+param.value+'</textarea></td>\n' +
         '</tr>'
 }
-function processMultipartParam(param){
-
+function processFileParam(param){
+    return '<tr >\n' +
+        '<td class="param-name"><span class="param-name-text">'+param.name+'</span><br/><span class="param-type">('+param.type+')</span></td>\n' +
+        '<td class="param-value"><input type="file"  class="form-control" /></td>\n' +
+        '</tr>'
 }
 
-function processContentType(contentType){
-    var type = contentType.substring(0,contentType.indexOf('/'));
-    if (type.toLowerCase() == 'multipart'){
-        isMultipart = true;
-    }
-}
+
 
 
 function sendReq() {
@@ -117,45 +115,36 @@ function sendReq() {
     }
     ajaxContent['headers'] = headers;
     var paramValues = $('.param-value')
-    var params = {}
-    var jsonData = null
+    var typeParamMap = {}
     for (let paramValueHtml of paramValues) {
         var paramValue = $(paramValueHtml)
         var input = paramValue.find('.form-control')
-        if (input[0].tagName == 'TEXTAREA'){
-            jsonData = input.val()
+        var inputType = input.attr('type'),name = paramValue.prev().find('.param-name-text').text();
+
+        var param = {};
+        if (inputType == 'file'){
+            param.val = input[0].files
         }else{
-            params[paramValue.prev().find('.param-name-text').text()] = input.val()
+            param.val = input.val()
         }
+        param.metadata = info.params[name]
+        if (typeParamMap[param.metadata.type] == null){
+            typeParamMap[param.metadata.type] = []
+        }
+        typeParamMap[param.metadata.type].push(param)
     }
-
-    if (isMultipart){
-        ajaxContent['processData'] = false;
-        ajaxContent['Content-Type'] = false
-        var formData = new FormData();
-        for (let paramName in params) {
-            formData.append(paramName,params[paramName])
-        }
-        ajaxContent['data'] = formData
-    }else if (jsonData != null){
-        ajaxContent['processData'] = false;
-        ajaxContent['headers']['Content-Type'] = 'application/json;charset=utf-8'
-        if (Object.keys(params).length != 0){
-            var urlParam = ''
-            for (let paramName in params) {
-                urlParam+= "&"+paramName+"="+params[paramName]
-            }
-            urlParam = urlParam.substring(1)
-            ajaxContent['url'] += '?'+urlParam
-        }
-        ajaxContent['data'] = jsonData
-    }else{
-        ajaxContent['data'] = params
-    }
-
+    contentGenericReq(ajaxContent,info.headers["Content-Type"],typeParamMap);
+    ajaxContent.url = baseUrl + ajaxContent.url
     $.ajax(ajaxContent)
 
 }
+
+
+
+
+
+
+
 var responseText = ''
 var resType = 'TEXT'
 function res(res){

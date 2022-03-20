@@ -26,6 +26,20 @@ public class AiaConfig {
      */
     private List<String> patternUrl;
 
+    /**
+     * 访问url，单服务不使用
+     */
+    private String accessUrl;
+
+
+    public String getAccessUrl() {
+        return accessUrl;
+    }
+
+    public void setAccessUrl(String accessUrl) {
+        this.accessUrl = accessUrl;
+    }
+
     public boolean isPersist() {
 
         return persist;

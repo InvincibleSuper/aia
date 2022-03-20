@@ -1,5 +1,6 @@
 package my.jwds.springweb;
 
+import my.jwds.config.AiaConfigHolder;
 import my.jwds.core.api.mgt.AiaApiManager;
 import my.jwds.core.api.mgt.DefaultAiaApiManager;
 import my.jwds.cache.CacheManager;
@@ -38,7 +39,8 @@ public class AiaSpringWebConfigure {
 
 
     public AiaConfig aiaConfig(){
-        return new AiaConfig(true, ClassUtils.originPath());
+        AiaConfigHolder.config = new AiaConfig(true, ClassUtils.originPath());
+        return AiaConfigHolder.config;
     }
 
 
@@ -104,11 +106,13 @@ public class AiaSpringWebConfigure {
         HandlerMethodArgumentResolver param = new ParamHandlerMethodArgumentResolver(definitionResolver,modelResolver);
         HandlerMethodArgumentResolver requestBody = new RequestBodyHandlerMethodArgumentResolver(definitionResolver,modelResolver);
         HandlerMethodArgumentResolver requestParam = new RequestParamHandlerMethodArgumentResolver(definitionResolver,modelResolver);
+        HandlerMethodArgumentResolver pathVariable = new PathVariableHandlerMethodArgumentResolver(definitionResolver,modelResolver);
         resolverRegister.registerResolver(ignore);
         resolverRegister.registerResolver(file);
         resolverRegister.registerResolver(param);
         resolverRegister.registerResolver(requestBody);
         resolverRegister.registerResolver(requestParam);
+        resolverRegister.registerResolver(pathVariable);
         return resolverRegister;
     }
 

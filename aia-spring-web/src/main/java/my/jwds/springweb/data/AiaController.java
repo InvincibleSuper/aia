@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -27,14 +28,14 @@ public class AiaController {
 
     @GetMapping("api")
     @ResponseBody
-    public Map<String, List<InvokeApi>> allApi(){
+    public Object allApi(HttpServletRequest request){
         return aiaManager.allApi();
     }
 
 
     @GetMapping("template")
     @ResponseBody
-    public Map<String, List<AiaTemplate>> allTemplate(){
+    public Object allTemplate(HttpServletRequest request){
         Map<String, List<AiaTemplate>> res = new LinkedHashMap<>();
         for (Map.Entry<String, Map<InvokeUrl, AiaTemplate>> entry : aiaManager.allTemplate().entrySet()) {
             res.put(entry.getKey(),new ArrayList(entry.getValue().values()));
@@ -48,4 +49,8 @@ public class AiaController {
     public boolean scan(){
         return aiaManager.isScan();
     }
+
+
+
+
 }

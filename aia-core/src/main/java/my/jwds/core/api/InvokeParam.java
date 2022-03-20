@@ -10,7 +10,7 @@ public class InvokeParam extends InvokeDefinition  {
     /**
      * 类别
      */
-    private String contentType;
+    private InvokeContentType contentType;
 
     /**
      * 执行参数的模型
@@ -28,11 +28,11 @@ public class InvokeParam extends InvokeDefinition  {
     private String name;
 
 
-    public String getContentType() {
+    public InvokeContentType getContentType() {
         return contentType;
     }
 
-    public void setContentType(String contentType) {
+    public void setContentType(InvokeContentType contentType) {
         this.contentType = contentType;
     }
 
@@ -60,7 +60,7 @@ public class InvokeParam extends InvokeDefinition  {
         this.name = name;
     }
 
-    public InvokeParam(String definition, String contentType, ModelProperty model, String prefix, String name) {
+    public InvokeParam(String definition, InvokeContentType contentType, ModelProperty model, String prefix, String name) {
         super(definition);
         this.contentType = contentType;
         this.model = model;

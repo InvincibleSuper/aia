@@ -112,6 +112,10 @@ public class AiaSpringBootConfigure extends AiaSpringWebConfigure {
     public HandlerMethodArgumentResolver requestParamHandlerMethodArgumentResolver(PriorityDefinitionResolver definitionResolver, ModelResolver modelResolver){
         return new RequestParamHandlerMethodArgumentResolver(definitionResolver,modelResolver);
     }
+    @Bean
+    public HandlerMethodArgumentResolver pathVariableHandlerMethodArgumentResolver(PriorityDefinitionResolver definitionResolver, ModelResolver modelResolver){
+        return new PathVariableHandlerMethodArgumentResolver(definitionResolver,modelResolver);
+    }
 
     @Bean
     @ConditionalOnMissingBean

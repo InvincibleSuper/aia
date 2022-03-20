@@ -4,6 +4,8 @@ import my.jwds.cache.Cache;
 import my.jwds.cache.CacheManager;
 import my.jwds.core.api.DefaultApiComparator;
 import my.jwds.core.api.InvokeApi;
+import my.jwds.core.template.AiaTemplate;
+import my.jwds.core.template.DefaultTemplateComparator;
 
 import java.util.*;
 
@@ -13,6 +15,7 @@ public class DefaultAiaApiManager implements AiaApiManager {
     private Cache<String,List<InvokeApi>> cache;
 
     private Comparator<InvokeApi> comparator;
+
 
     private static final String cacheName = "API_CACHE";
 
@@ -83,9 +86,10 @@ public class DefaultAiaApiManager implements AiaApiManager {
                 apis = new ArrayList<>();
                 cache.put(api.getGroup(),apis);
             }
-            apis.sort(getComparator());
             apis.add(api);
+            apis.sort(getComparator());
         }
+
     }
 
 

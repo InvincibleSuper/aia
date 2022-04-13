@@ -8,6 +8,10 @@ var pageTypeIcon = {
 
 var allData = {}
 
+var map = {
+
+}
+
 /**
  * 初始化
  */
@@ -52,21 +56,34 @@ function initNav(){
         $('.nav-sidebar>li').removeClass("active");
         $(this).addClass("active");
         var currentPageType = $(this).attr('name');
-        if (allData[currentPageType] == null){
-            $.ajax({
-                url: $(this).attr('url'),
-                async:false,
-                success: function (data){
-                    allData[currentPageType] = data;
-                }
-            });
-        }
+        getAiaData($(this).attr('url'),currentPageType)
         if (pageType != currentPageType){
             pageType = currentPageType;
             initContent();
         }
 
     })
+}
+
+function getAiaData(url,currentPageType){
+    if (allData[currentPageType] == null){
+        $.ajax({
+            url: url,
+            async:false,
+            success: function (data){
+                allData[currentPageType] = data;
+            }
+        });
+
+        map[currentPageType] = newArrayList();
+        for (let group in  allData[currentPageType]) {
+            for (let info of allData[currentPageType][group]) {
+               map[currentPageType].add(info);
+            }
+        }
+
+    }
+    return allData[currentPageType]
 }
 
 
@@ -82,61 +99,55 @@ var treeDataParseFun = {
 
 var treeDataCache = {}
 
-function parseTemplateTreeData(){
+
+function parseTreeData(){
     if (treeDataCache[pageType] != null){
         return treeDataCache[pageType]
     }
-    var templateInfos = allData[pageType]
+    var infos = map[pageType]
     var treeDatas = []
-    let count = 0;
-    for (let group in templateInfos) {
-        var nodes = []
-        for (let templateInfo of templateInfos[group]) {
-            var url = templateInfo.url
-            nodes.push({
-                text:getTemplateTreeItemHtml(url.method,url.url,templateInfo.name),
-                type:url.method,
-                url:url.url,
-                unique:pageType+"_"+count++,
-                data:templateInfo,
-                tabName: templateInfo.name
-            })
+    var nodesMap = {}
+    for (let i = 0; i < infos.size; i++) {
+        let info = infos.get(i)
+        if (nodesMap[info.group] == null){
+            nodesMap[info.group] = [];
         }
+        nodesMap[info.group].push(treeDataParseFun[pageType](info,i))
+    }
+    for (let group in nodesMap) {
         treeDatas.push({
             text:group,
-            nodes:nodes
+            nodes:nodesMap[group]
         });
     }
+
     treeDataCache[pageType] = treeDatas
     return treeDatas;
 }
 
-function parseApiTreeData(){
-    if (treeDataCache[pageType] != null){
-        return treeDataCache[pageType]
+function parseTemplateTreeData(templateInfo,index){
+    var url = templateInfo.url
+    return {
+        text:getTemplateTreeItemHtml(url.method,url.url,templateInfo.name),
+        type:url.method,
+        url:url.url,
+        tabName: templateInfo.name,
+        pageType:pageType,
+        index:index,
+        unique:pageType+'_'+index
     }
-    var apiInfos = allData[pageType]
-    var treeDatas = []
-    let count = 0;
-    for (let group in apiInfos) {
-        var nodes = []
-        for (let apiInfo of apiInfos[group]) {
-            nodes.push({
-                text:getApiTreeItemHtml(apiInfo.url.method,apiInfo.url.url,apiInfo.definition),
-                type:apiInfo.url.method,
-                url:apiInfo.url.url,
-                unique:pageType+"_"+count++,
-                data:apiInfo,
-                tabName: apiInfo.url.method+' '+apiInfo.url.url
-            })
-        }
-        treeDatas.push({
-            text:group,
-            nodes:nodes
-        });
+}
+
+function parseApiTreeData(apiInfo,index){
+    return {
+        text:getApiTreeItemHtml(apiInfo.url.method,apiInfo.url.url,apiInfo.definition),
+        type:apiInfo.url.method,
+        url:apiInfo.url.url,
+        tabName: apiInfo.url.method+' '+apiInfo.url.url,
+        pageType:pageType,
+        index:index,
+        unique:pageType+'_'+index
     }
-    treeDataCache[pageType] = treeDatas
-    return treeDatas;
 }
 
 function getApiTreeItemHtml(type,url,definition){
@@ -151,7 +162,7 @@ function getTemplateTreeItemHtml(type,url,name){
 }
 
 function initContent(){
-    var treeData = treeDataParseFun[pageType]();
+    var treeData = parseTreeData();
     $('.content-tree').treeview({
         "data":treeData,
         "expandIcon":"glyphicon glyphicon-chevron-down",
@@ -171,7 +182,7 @@ function openInvoke(data){
     $('.invoke-content-items>.invoke-content-item').hide();
     $('.invoke-tabs>.nav-tabs>li').removeClass("active");
     if ($('.invoke-content-item[unique="'+data.unique+'"]').length == 0){
-        chooseInfo = data.data
+        chooseInfo = map[data.pageType].get(data.index)
         $('.invoke-content-items')
             .append(getFrameHtml(data.unique,data.url));
         $('.invoke-tabs>.nav-tabs')

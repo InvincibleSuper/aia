@@ -34,3 +34,82 @@
     background: #f5f5f5;
     border:#f5f5f5;
 }
+
+.template-chain{
+    float: right;
+
+}
+.template-chain-item:hover{
+    cursor:pointer;
+
+}
+
+.template-flow{
+    width: 0;
+    height: 0;
+    border: 35px solid #eeeeee;
+
+}
+
+.template-flow-label{
+    line-height: 70px;
+}
+.template-flow1{
+    border-top-color: rgba(128, 0, 0, 0);
+    border-bottom: none;
+}
+.template-flow2{
+    width: 70px;
+    height: 70px;
+    background: #eeeeee;
+    text-align: center;
+    color: #7f8483;
+    font-size: 36px;
+}
+.template-flow3{
+    border-left-color: rgba(128, 0, 0, 0);
+    border-right-color: rgba(128, 0, 0, 0);
+    border-bottom: none;
+}
+
+.template-flow1-hover{
+    border-left-color: #428bca;
+    border-right-color: #428bca;
+}
+.template-flow2-hover{
+    background: #428bca;
+    color: white;
+}
+.template-flow3-hover{
+    border-top-color: #428bca;
+}
+.template-flow1-active{
+    border-left-color: #428bca;
+    border-right-color: #428bca;
+}
+.template-flow2-active{
+    background: #428bca;
+    color: white;
+}
+.template-flow3-active{
+    border-top-color: #428bca;
+}
+.template-chain{
+    position: fixed;
+    right: 0;
+    height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+*::-webkit-scrollbar {     width: 10px;   }
+*::-webkit-scrollbar-track {     background: rgb(179, 177, 177);     border-radius: 10px; }
+*::-webkit-scrollbar-thumb {     background: rgb(136, 136, 136);     border-radius: 10px;   }
+*::-webkit-scrollbar-thumb:hover {     background: rgb(100, 100, 100);     border-radius: 10px;   }
+*::-webkit-scrollbar-thumb:active {     background: rgb(68, 68, 68);     border-radius: 10px;   }
+
+.template-manager{
+    float: right;
+}
+.samples{
+    display: none;
+}

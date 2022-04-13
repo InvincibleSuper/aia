@@ -30,19 +30,39 @@ public class DefaultTemplateGenerator implements TemplateGenerator{
     public void generate(AiaManager aiaManager) {
         aiaManager.allApi().forEach((group,apis)->{
             for (InvokeApi invokeApi : apis) {
-                AiaTemplate template = new AiaTemplate();
-                template.setUrl(invokeApi.getUrl());
-                template.setName(resolveName(invokeApi));
-                template.setGroup(group);
-                generateParams(invokeApi.getParams(),template);
-                generateHeader(invokeApi.getHeaders(), template);
+                AiaTemplate template = generateTemplate(invokeApi);
                 aiaManager.addTemplate(template);
             }
         });
 
     }
 
-    protected void generateParams(List<InvokeParam> params ,AiaTemplate template){
+    /**
+     * 生成模板
+     *
+     * @param aiaManager
+     * @param api
+     */
+    @Override
+    public AiaTemplate generate(AiaManager aiaManager, String api) {
+        InvokeApi invokeApi = aiaManager.searchApi(api);
+        if (invokeApi == null)return null;
+        return generateTemplate(invokeApi);
+    }
+
+    protected AiaTemplate generateTemplate(InvokeApi invokeApi){
+        AiaTemplate template = new AiaTemplate();
+        template.setUrl(invokeApi.getUrl());
+        template.setName(resolveName(invokeApi));
+        template.setGroup(invokeApi.getGroup());
+        generateParams(invokeApi.getParams(),template);
+        generateHeader(invokeApi.getHeaders(), template);
+        return template;
+    }
+
+
+
+    protected void generateParams(List<InvokeParam> params , AiaTemplate template){
         if (!params.isEmpty()){
             template.setParams(new LinkedHashMap<>());
         }

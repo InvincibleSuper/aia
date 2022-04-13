@@ -142,4 +142,22 @@ public class DefaultAiaApiManager implements AiaApiManager {
         return res;
     }
 
+
+    /**
+     * 查询api
+     * 使用 请求方法+空格+路径，例如"GET /aia/r1"
+     *
+     * @param api
+     * @return
+     */
+    @Override
+    public InvokeApi searchApi(String api) {
+        String [] strs = api.split(" ");
+        for (List<InvokeApi> invokeApis : cache.values()) {
+            for (InvokeApi invokeApi : invokeApis) {
+                if (invokeApi.getUrl().getMethod().equalsIgnoreCase(strs[0]) && invokeApi.getUrl().getUrl().equals(strs[1]))return invokeApi;
+            }
+        }
+        return null;
+    }
 }

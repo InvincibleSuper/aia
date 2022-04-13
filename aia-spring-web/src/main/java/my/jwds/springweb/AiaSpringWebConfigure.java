@@ -20,6 +20,8 @@ import my.jwds.core.model.resolver.DefaultModelResolver;
 import my.jwds.core.model.resolver.ModelResolver;
 import my.jwds.core.plugin.mgt.AiaPluginManager;
 import my.jwds.core.plugin.mgt.DefaultAiaPluginManager;
+import my.jwds.core.template.DefaultTemplateGenerator;
+import my.jwds.core.template.TemplateGenerator;
 import my.jwds.springweb.data.AiaController;
 import my.jwds.springweb.parse.RequestMappingHandlerMappingParser;
 import my.jwds.springweb.parse.SpringHandlerMappingParserComposite;
@@ -37,13 +39,13 @@ import java.util.List;
 @Configuration
 public class AiaSpringWebConfigure {
 
-
+    @Bean
     public AiaConfig aiaConfig(){
         AiaConfigHolder.config = new AiaConfig(true, ClassUtils.originPath());
         return AiaConfigHolder.config;
     }
 
-
+    @Bean
     public SecuritySupport aiaSecuritySupport(AiaConfig config){
         SecuritySupport securitySupport = new SecuritySupport();
         if (config.getPatternQualifiedNames()!= null){
@@ -63,60 +65,81 @@ public class AiaSpringWebConfigure {
         return securitySupport;
     }
 
-
+    @Bean
     public CacheManager cacheManager(){
         return new DefaultCacheManager();
     }
 
-
+    @Bean
     public AiaTemplateManager aiaTemplateManager(CacheManager cacheManager){
         return new DefaultAiaTemplateManager(cacheManager);
     }
-
+    @Bean
     public AiaPluginManager aiaPluginManager(CacheManager cacheManager){
         return new DefaultAiaPluginManager(cacheManager);
     }
-
+    @Bean
     public AiaApiManager aiaApiManager(CacheManager cacheManager){
         return new DefaultAiaApiManager(cacheManager);
     }
 
-
+    @Bean
     public AiaManager aiaManager(AiaTemplateManager templateManager,AiaPluginManager pluginManager,AiaApiManager apiManager){
         return new AiaManager(templateManager,pluginManager,apiManager);
     }
-
-
-
-
+    @Bean
+    public DefinitionResolver javadocDefinitionResolver(AiaConfig aiaConfig){
+        return new JavadocDefinitionResolver(aiaConfig.getSrcPath());
+    }
+    @Bean
     public PriorityDefinitionResolver priorityDefinitionResolver(List<DefinitionResolver> definitionResolvers){
         return new PriorityDefinitionResolver(definitionResolvers);
     }
 
-
-    public ModelResolver defaultModelResolver(DefinitionResolver priorityDefinitionResolver){
+    @Bean
+    public ModelResolver defaultModelResolver(PriorityDefinitionResolver priorityDefinitionResolver){
         return new DefaultModelResolver(priorityDefinitionResolver);
     }
 
-
-    public HandlerMethodArgumentResolverRegister handlerMethodArgumentResolverRegister(DefinitionResolver definitionResolver, ModelResolver modelResolver){
-        HandlerMethodArgumentResolverRegister resolverRegister = new DefaultHandlerMethodArgumentResolverRegister();
-        HandlerMethodArgumentResolver ignore = new IgnoreHandlerMethodArgumentResolver();
-        HandlerMethodArgumentResolver file = new MultipartFileHandlerMethodArgumentResolver(definitionResolver,modelResolver);
-        HandlerMethodArgumentResolver param = new ParamHandlerMethodArgumentResolver(definitionResolver,modelResolver);
-        HandlerMethodArgumentResolver requestBody = new RequestBodyHandlerMethodArgumentResolver(definitionResolver,modelResolver);
-        HandlerMethodArgumentResolver requestParam = new RequestParamHandlerMethodArgumentResolver(definitionResolver,modelResolver);
-        HandlerMethodArgumentResolver pathVariable = new PathVariableHandlerMethodArgumentResolver(definitionResolver,modelResolver);
-        resolverRegister.registerResolver(ignore);
-        resolverRegister.registerResolver(file);
-        resolverRegister.registerResolver(param);
-        resolverRegister.registerResolver(requestBody);
-        resolverRegister.registerResolver(requestParam);
-        resolverRegister.registerResolver(pathVariable);
-        return resolverRegister;
+    @Bean
+    public HandlerMethodArgumentResolver ignoreHandlerMethodArgumentResolver(){
+        return new IgnoreHandlerMethodArgumentResolver();
     }
 
-    public SpringHandlerMappingParserComposite parserComposite(DefinitionResolver definitionResolver
+    @Bean
+    public HandlerMethodArgumentResolver multipartFileHandlerMethodArgumentResolver(PriorityDefinitionResolver definitionResolver, ModelResolver modelResolver){
+        return new MultipartFileHandlerMethodArgumentResolver(definitionResolver,modelResolver);
+    }
+
+
+    @Bean
+    public HandlerMethodArgumentResolver paramHandlerMethodArgumentResolver(PriorityDefinitionResolver definitionResolver, ModelResolver modelResolver){
+        return new ParamHandlerMethodArgumentResolver(definitionResolver,modelResolver);
+    }
+
+
+    @Bean
+    public HandlerMethodArgumentResolver requestBodyHandlerMethodArgumentResolver(PriorityDefinitionResolver definitionResolver, ModelResolver modelResolver){
+        return new RequestBodyHandlerMethodArgumentResolver(definitionResolver,modelResolver);
+    }
+
+    @Bean
+    public HandlerMethodArgumentResolver requestParamHandlerMethodArgumentResolver(PriorityDefinitionResolver definitionResolver, ModelResolver modelResolver){
+        return new RequestParamHandlerMethodArgumentResolver(definitionResolver,modelResolver);
+    }
+    @Bean
+    public HandlerMethodArgumentResolver pathVariableHandlerMethodArgumentResolver(PriorityDefinitionResolver definitionResolver, ModelResolver modelResolver){
+        return new PathVariableHandlerMethodArgumentResolver(definitionResolver,modelResolver);
+    }
+
+    @Bean
+    public HandlerMethodArgumentResolverRegister handlerMethodArgumentResolverRegister(List<HandlerMethodArgumentResolver> argumentResolvers){
+        HandlerMethodArgumentResolverRegister argumentResolverRegister = new DefaultHandlerMethodArgumentResolverRegister();
+        argumentResolverRegister.registerResolvers(argumentResolvers);
+        return argumentResolverRegister;
+    }
+    @Bean
+    public SpringHandlerMappingParserComposite parserComposite(PriorityDefinitionResolver definitionResolver
             ,ModelResolver modelResolver
             , HandlerMethodArgumentResolverRegister argumentResolverRegister
             ,SecuritySupport securitySupport){
@@ -127,17 +150,8 @@ public class AiaSpringWebConfigure {
 
 
     @Bean
-    public AiaApiScanner aiaApiScanner(ApplicationContext context){
-        AiaConfig aiaConfig = aiaConfig();
-        SecuritySupport securitySupport = aiaSecuritySupport(aiaConfig);
-        CacheManager cacheManager = cacheManager();
-        AiaManager aiaManager = aiaManager(aiaTemplateManager(cacheManager),aiaPluginManager(cacheManager),aiaApiManager(cacheManager));
-        JavadocDefinitionResolver javadocDefinitionResolver = new JavadocDefinitionResolver(aiaConfig.getSrcPath());
-        DefinitionResolver definitionResolver = priorityDefinitionResolver(Collections.singletonList(javadocDefinitionResolver));
-        ModelResolver modelResolver = defaultModelResolver(definitionResolver);
-        HandlerMethodArgumentResolverRegister argumentResolverRegister = handlerMethodArgumentResolverRegister(definitionResolver,modelResolver);
-        SpringHandlerMappingParserComposite parserComposite = parserComposite(definitionResolver,modelResolver,argumentResolverRegister,securitySupport);
-        return new SpringWebAiaScanner(context,parserComposite,aiaManager);
+    public AiaApiScanner aiaApiScanner(ApplicationContext applicationContext,SpringHandlerMappingParserComposite parserComposite,AiaManager aiaManager){
+        return new SpringWebAiaScanner(applicationContext,parserComposite,aiaManager);
     }
 
     @Bean
@@ -146,9 +160,12 @@ public class AiaSpringWebConfigure {
     }
 
     @Bean
-    public AiaController aiaController(AiaApiScanner aiaApiScanner){
-        AiaController aiaController = new AiaController();
-        aiaController.setAiaManager(aiaApiScanner.getAiaManager());
-        return aiaController;
+    public AiaController aiaController(){
+        return new AiaController();
+    }
+
+    @Bean
+    public TemplateGenerator templateGenerator(){
+        return new DefaultTemplateGenerator();
     }
 }

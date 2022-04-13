@@ -13,4 +13,12 @@ public interface TemplateGenerator {
      */
     void generate(AiaManager aiaManager);
 
+
+
+    /**
+     * 生成模板
+     * @param aiaManager
+     */
+    AiaTemplate generate(AiaManager aiaManager,String api);
+
 }

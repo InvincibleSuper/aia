@@ -14,6 +14,8 @@ import my.jwds.core.security.UrlWhiteList;
 import my.jwds.core.template.AiaTemplateManager;
 import my.jwds.core.model.resolver.ModelResolver;
 import my.jwds.core.plugin.mgt.AiaPluginManager;
+import my.jwds.core.template.DefaultTemplateGenerator;
+import my.jwds.core.template.TemplateGenerator;
 import my.jwds.springweb.AiaSpringWebConfigure;
 import my.jwds.springweb.SpringWebAiaScanner;
 import my.jwds.springweb.data.AiaController;
@@ -152,5 +154,9 @@ public class AiaSpringBootConfigure extends AiaSpringWebConfigure {
         return new SpringWebAiaScanner(applicationContext,parserComposite,aiaManager);
     }
 
-
+    @Bean
+    @ConditionalOnMissingBean
+    public TemplateGenerator templateGenerator(){
+        return super.templateGenerator();
+    }
 }

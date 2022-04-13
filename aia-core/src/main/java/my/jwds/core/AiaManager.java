@@ -233,4 +233,17 @@ public class AiaManager implements AiaTemplateManager, AiaPluginManager, AiaApiM
     public Map<String, List<AiaTemplate>> getGroupTemplateMap() {
         return templateManager.getGroupTemplateMap();
     }
+
+
+    /**
+     * 查询api
+     * 使用 请求方法+空格+路径，例如"GET /aia/r1"
+     *
+     * @param api
+     * @return
+     */
+    @Override
+    public InvokeApi searchApi(String api) {
+        return apiManager.searchApi(api);
+    }
 }

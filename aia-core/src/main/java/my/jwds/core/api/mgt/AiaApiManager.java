@@ -68,4 +68,13 @@ public interface AiaApiManager {
      */
     Map<String,List<InvokeApi>> allApi();
 
+
+    /**
+     * 查询api
+     * 使用 请求方法+空格+路径，例如"GET /aia/r1"
+     * @param api
+     * @return
+     */
+    InvokeApi searchApi(String api);
+
 }

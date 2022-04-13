@@ -4,6 +4,8 @@ import my.jwds.core.AiaManager;
 import my.jwds.core.api.InvokeApi;
 import my.jwds.core.api.InvokeUrl;
 import my.jwds.core.template.AiaTemplate;
+import my.jwds.core.template.TemplateGenerator;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -17,12 +19,11 @@ import java.util.Map;
 @RequestMapping("/aia/info")
 public class AiaController {
 
-
+    @Autowired
     private AiaManager aiaManager;
 
-    public void setAiaManager(AiaManager aiaManager) {
-        this.aiaManager = aiaManager;
-    }
+    @Autowired
+    private TemplateGenerator templateGenerator;
 
 
 
@@ -51,6 +52,11 @@ public class AiaController {
     }
 
 
+    @GetMapping("templateGenerate")
+    @ResponseBody
+    public Object templateGenerate(String api){
+        return templateGenerator.generate(aiaManager,api);
+    }
 
 
 }

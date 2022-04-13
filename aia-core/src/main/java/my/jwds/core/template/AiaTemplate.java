@@ -63,7 +63,7 @@ public class AiaTemplate {
 
 
 
-     class TemplateParam{
+    class TemplateParam{
          String type;
          String value;
          boolean array;

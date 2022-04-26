@@ -1,6 +1,8 @@
 package my.jwds.utils;
 
-import com.sun.istack.internal.Nullable;
+
+
+
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -23,7 +25,7 @@ public class StringUtils {
     }
 
     public static String[] tokenizeToStringArray(
-            @Nullable String str, String delimiters, boolean trimTokens, boolean ignoreEmptyTokens) {
+           String str, String delimiters, boolean trimTokens, boolean ignoreEmptyTokens) {
 
         if (str == null) {
             return EMPTY_STRING_ARRAY;
@@ -43,7 +45,7 @@ public class StringUtils {
         return toStringArray(tokens);
     }
 
-    public static String[] toStringArray(@Nullable Collection<String> collection) {
+    public static String[] toStringArray( Collection<String> collection) {
         return (!(collection == null || collection.isEmpty()) ? collection.toArray(EMPTY_STRING_ARRAY) : EMPTY_STRING_ARRAY);
     }
 }

@@ -35,8 +35,8 @@ public class SpringWebAiaScanner extends AbstractApiScanner {
             List<HandlerMapping> handlerMappings = HandlerMappingUtils.get(ac);
             for (HandlerMapping handlerMapping : handlerMappings) {
                 parserRegister.parse(getAiaManager(),handlerMapping);
-                getAiaManager().setScan(true);
             }
+            getAiaManager().setScan(true);
         }).start();
     }
 

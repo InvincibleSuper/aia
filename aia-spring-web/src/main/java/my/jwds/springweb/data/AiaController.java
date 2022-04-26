@@ -45,10 +45,10 @@ public class AiaController {
     }
 
 
-    @GetMapping("scan")
+    @GetMapping("complete")
     @ResponseBody
-    public boolean scan(){
-        return aiaManager.isScan();
+    public boolean complete(){
+        return aiaManager.isGenerateTemplate();
     }
 
 

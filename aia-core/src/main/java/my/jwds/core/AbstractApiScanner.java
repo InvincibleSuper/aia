@@ -32,6 +32,7 @@ public abstract class AbstractApiScanner implements AiaApiScanner {
                 }
             }
             getTemplateGenerator().generate(aiaManager);
+            getAiaManager().setGenerateTemplate(true);
         }).start();
     }
 

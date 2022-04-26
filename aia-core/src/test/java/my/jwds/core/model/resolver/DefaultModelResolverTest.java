@@ -1,6 +1,16 @@
 package my.jwds.core.model.resolver;
 
+import my.jwds.core.api.definition.resolver.DefinitionResolver;
+import my.jwds.core.api.definition.resolver.JavadocDefinitionResolver;
+import my.jwds.core.api.definition.resolver.PriorityDefinitionResolver;
+import my.jwds.core.model.ModelProperty;
+import my.jwds.core.model.ModelPropertyResolveInfo;
 import org.junit.Test;
+
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * test
@@ -8,16 +18,11 @@ import org.junit.Test;
 public class DefaultModelResolverTest {
     @Test
     public void testResolver() throws Exception {
-//        ModelResolver<ModelPropertyResolveInfo> resolver = new DefaultModelResolver(new PriorityDefinitionResolver(
-//                new JavadocDefinitionResolver("E:\\java\\workSpace\\aia\\aia-core\\src\\test\\java"))
-//        );
-//        Type type = B.class.getField("a").getGenericType();
-//        ModelPropertyResolveInfo info = new ModelPropertyResolveInfo(type,"a",type,B.class.getField("a").getDeclaringClass());
-//        ModelProperty property = resolver.resolve(info);
-//        Type methodType = A.class.getMethod("a", A.class).getGenericParameterTypes()[0];
-//        ModelPropertyResolveInfo info1 = new ModelPropertyResolveInfo(methodType,"a");
-//        property = resolver.resolve(info1);
-//        System.out.println(property);
+        List<DefinitionResolver> list = new ArrayList<>();
+        list.add(new JavadocDefinitionResolver("E:\\java\\workSpace\\aia\\aia-core\\src\\test\\java"));
+        ModelResolver resolver = new DefaultModelResolver(new PriorityDefinitionResolver(list));
+        ModelProperty property = resolver.resolve(Map.class);
+        System.out.println(property);
     }
 
 

@@ -86,7 +86,7 @@ public class DefaultModelResolver implements ModelResolver<Type>{
 
     protected ModelProperty resolveClass(Class clz,String name,Type origin,Set set){
         ModelProperty now  = resolveSpecial(clz,clz,name);
-        if (now instanceof ObjectModelProperty){
+        if (now instanceof ObjectModelProperty && ((ObjectModelProperty) now).getModel() != null){
             ((ObjectModelProperty) now).setModel(resolveModel(clz,set));
         }else if (now instanceof ArrayModelProperty){
             ((ArrayModelProperty) now).setComponent(resolveProperty(clz.getComponentType(),null,origin,null,set));

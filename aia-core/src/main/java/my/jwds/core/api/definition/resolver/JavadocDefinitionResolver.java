@@ -22,7 +22,7 @@ public class JavadocDefinitionResolver extends AbstractDefinitionResolver{
 
     private String srcPath;
 
-    private static HashMap<Class, ClassDoc> docs = new HashMap<>();
+    private static HashMap<String, ClassDoc> docs = new HashMap<>();
 
     public JavadocDefinitionResolver(String srcPath){
         this.srcPath = srcPath;
@@ -31,11 +31,7 @@ public class JavadocDefinitionResolver extends AbstractDefinitionResolver{
 
         public static boolean start(RootDoc root) {
             ClassDoc doc = root.classes()[0];
-            try {
-                JavadocDefinitionResolver.docs.put(ClassUtils.loadClass(doc.toString()),doc);
-            } catch (ClassNotFoundException e) {
-                throw new AiaDefinitionException("不能找到类"+doc);
-            }
+            JavadocDefinitionResolver.docs.put(doc.toString(),doc);
             return true;
         }
     }
@@ -56,7 +52,7 @@ public class JavadocDefinitionResolver extends AbstractDefinitionResolver{
                     JavadocDefinitionResolver.Doclet.class.getName(),
                     "-encoding","utf-8",
                     javaPath});
-            ClassDoc classDoc =  docs.get(clz);
+            ClassDoc classDoc =  docs.get(fullyName);
             resolveNowAndInnerClassDefinition(clz,classDoc);
         }
     }

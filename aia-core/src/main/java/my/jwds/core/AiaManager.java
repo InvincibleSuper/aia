@@ -29,6 +29,9 @@ public class AiaManager implements AiaTemplateManager, AiaPluginManager, AiaApiM
 
     private boolean scan;
 
+    private boolean generateTemplate;
+
+
 
     public AiaManager(AiaTemplateManager templateManager, AiaPluginManager pluginManager, AiaApiManager apiManager) {
         this.templateManager = templateManager;
@@ -65,6 +68,13 @@ public class AiaManager implements AiaTemplateManager, AiaPluginManager, AiaApiM
         this.apiManager = apiManager;
     }
 
+    public void setGenerateTemplate(boolean generateTemplate) {
+        this.generateTemplate = generateTemplate;
+    }
+
+    public boolean isGenerateTemplate() {
+        return generateTemplate;
+    }
 
     /**
      * 添加模板

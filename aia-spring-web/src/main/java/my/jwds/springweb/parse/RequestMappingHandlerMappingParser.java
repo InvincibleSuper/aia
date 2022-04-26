@@ -83,6 +83,7 @@ public class RequestMappingHandlerMappingParser extends AbstractHandlerMappingPa
 
 
     protected List<InvokeApi> createInvokeApi(RequestMappingInfo requestMappingInfo,HandlerMethod handlerMethod){
+        System.out.println(resolveGroup(handlerMethod));
         if (!securitySupport.qualifiedNameInclude(MethodUtils.getQualifiedName(handlerMethod.getMethod()))){
             return new ArrayList<>();
         }

@@ -23,7 +23,7 @@ function aiaInit(){
 
 }
 function isScan(){
-    var scan = scanFlag()
+    var scan = isComplete()
     if (scan){
         clearInterval(init)
         $('.aia').show();
@@ -36,10 +36,10 @@ function isScan(){
     return isScan;
 }
 
-function scanFlag(){
+function isComplete(){
     var res = false;
     $.ajax({
-        url: 'info/scan',
+        url: 'info/complete',
         async:false,
         success: function (data){
             res = data;

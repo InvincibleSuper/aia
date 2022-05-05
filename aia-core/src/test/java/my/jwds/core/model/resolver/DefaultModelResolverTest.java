@@ -4,10 +4,8 @@ import my.jwds.core.api.definition.resolver.DefinitionResolver;
 import my.jwds.core.api.definition.resolver.JavadocDefinitionResolver;
 import my.jwds.core.api.definition.resolver.PriorityDefinitionResolver;
 import my.jwds.core.model.ModelProperty;
-import my.jwds.core.model.ModelPropertyResolveInfo;
 import org.junit.Test;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;

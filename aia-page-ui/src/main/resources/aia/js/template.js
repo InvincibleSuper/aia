@@ -27,7 +27,7 @@ function sendReq(){
         icon: 1,
         time: 1000
     },);
-
+    updateTemplate()
 }
 
 function parseChain(info){
@@ -56,11 +56,35 @@ function addTemplate(templateDom,api){
             templateDoms.get(i).val(i);
         }
         templateDom.after(newTemplateDom)
-        data.next = templateDom.template.next;
-        templateDom.template.next = data;
+        addTemplateAfter(templateDom.template,data)
         initChainDom();
     })
 }
+
+
+function addTemplateAfter(template,addTemplate){
+    addTemplate.next = template.next;
+    template.next = addTemplate;
+    updateTemplate()
+}
+
+
+function updateTemplate(){
+    console.log(info)
+    $.ajax({
+        url:'../info/updateTemplate',
+        type:'post',
+        data:JSON.stringify(info),
+        contentType:'application/json;utf-8'
+    })
+
+}
+
+
+
+
+
+
 function getIndex(templateDom){
     return templateDom.val()*1;
 }
@@ -103,6 +127,7 @@ function templateDomInit(template,index){
             var headerValue = $(headerValueHtml)
             var input = headerValue.find('.form-control')
             headers[input.attr('name')] = input.val()
+            template.headers[input.attr('name')] = input.val()
         }
         ajaxContent['headers'] = headers;
         var paramValues = templateDom.find('.param-value')
@@ -116,6 +141,7 @@ function templateDomInit(template,index){
                 param.val = input[0].files
             }else{
                 param.val = input.val()
+                template.params[name].value = param.val
             }
             param.metadata = template.params[name]
             if (typeParamMap[param.metadata.type] == null){
@@ -341,7 +367,7 @@ function templateButtonInit(templateDom){
 
 function apiTreeInit(templateDom){
     var tree = layui.tree;
-
+    var layer = layui.layer
 
     var apiData = parent.getAiaData('info/api','api')
     var treeData = [];

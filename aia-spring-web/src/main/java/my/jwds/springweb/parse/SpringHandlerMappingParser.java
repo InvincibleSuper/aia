@@ -1,6 +1,6 @@
 package my.jwds.springweb.parse;
 
-import my.jwds.core.AiaManager;
+import my.jwds.core.AiaContext;
 import org.springframework.web.servlet.HandlerMapping;
 
 
@@ -21,9 +21,9 @@ public interface SpringHandlerMappingParser {
 
     /**
      * 解析 HandlerMapping
-     * @param aiaManager 总管理器
+     * @param aiaContext 上下文
      * @param handlerMapping spring请求处理映射
      */
-    void parse(AiaManager aiaManager,HandlerMapping handlerMapping);
+    void parse(AiaContext aiaContext, HandlerMapping handlerMapping);
 
 }

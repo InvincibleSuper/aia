@@ -11,7 +11,7 @@ public abstract class AbstractApiScanner implements AiaApiScanner {
 
 
 
-    private AiaManager aiaManager;
+    private AiaContext aiaContext;
 
 
     private TemplateGenerator templateGenerator;
@@ -24,15 +24,15 @@ public abstract class AbstractApiScanner implements AiaApiScanner {
     public void startScanner() {
         scanning();
         new Thread(()->{
-            while(!getAiaManager().isScan()){
+            while(!getAiaContext().isScan()){
                 try {
                     Thread.sleep(100);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             }
-            getTemplateGenerator().generate(aiaManager);
-            getAiaManager().setGenerateTemplate(true);
+            getTemplateGenerator().generate(aiaContext);
+            getAiaContext().setGenerateTemplate(true);
         }).start();
     }
 
@@ -45,21 +45,15 @@ public abstract class AbstractApiScanner implements AiaApiScanner {
      * @return aia管理器
      */
     @Override
-    public AiaManager getAiaManager() {
-        if (aiaManager == null){
+    public AiaContext getAiaContext() {
+        if (aiaContext == null){
             throw new AiaException("aiaManager不能为空");
         }
-        return aiaManager;
+        return aiaContext;
     }
 
-    /**
-     * 设置一个aia管理器
-     *
-     * @param aiaManager
-     */
-    @Override
-    public void setAiaManager(AiaManager aiaManager) {
-        this.aiaManager = aiaManager;
+    public void setAiaContext(AiaContext aiaContext) {
+        this.aiaContext = aiaContext;
     }
 
     public TemplateGenerator getTemplateGenerator() {

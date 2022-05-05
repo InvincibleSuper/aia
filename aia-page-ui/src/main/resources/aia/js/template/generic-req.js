@@ -1,11 +1,16 @@
 contentGenericReq = function (ajaxContent,contentType,typeParamMap) {
     processUrl(ajaxContent,typeParamMap)
-    contentTypeFunMap[contentType](ajaxContent,typeParamMap)
+    if ( contentTypeFunMap[contentType] == null){
+        contentTypeFunMap['other'](ajaxContent,typeParamMap,contentType)
+    }else{
+        contentTypeFunMap[contentType](ajaxContent,typeParamMap)
+    }
 }
 var contentTypeFunMap = {
     "multipart/form-data":function (ajaxContent,typeParamMap){
         ajaxContent['processData'] = false;
         ajaxContent['contentType'] = false
+        delete ajaxContent['headers']['Content-Type']
         var formData = new FormData();
         for (let paramType in typeParamMap) {
             for (let param of typeParamMap[paramType]) {
@@ -20,7 +25,6 @@ var contentTypeFunMap = {
         ajaxContent['data'] = formData
     },
     "application/json":function (ajaxContent,typeParamMap){
-
         ajaxContent['processData'] = false;
         ajaxContent['headers']['Content-Type'] = 'application/json;charset=utf-8'
         var jsonData = typeParamMap['json'] != null ? typeParamMap.json[0].val:null;
@@ -38,7 +42,24 @@ var contentTypeFunMap = {
             ajaxContent['data'] = data
         }
     },
-    "application/json1":function (ajaxContent,typeParamMap){},
+    "other":function (ajaxContent,typeParamMap,contentType){
+        ajaxContent['headers']['Content-Type'] = contentType
+        if (typeParamMap.param != null && typeParamMap.json==null && typeParamMap.file == null){
+            var data = {}
+            for (let param of typeParamMap.param) {
+                data[param.metadata.name] = param.val
+            }
+            ajaxContent['data'] = data
+        }else{
+            processParamAddUrl(ajaxContent,typeParamMap)
+            if (typeParamMap.json != null){
+                ajaxContent['data'] = typeParamMap.json[0].val
+            }else if (typeParamMap.file != null){
+                //暂时不处理，多种选择：多部分、二进制流
+            }
+        }
+
+    },
     "application/json1":function (ajaxContent,typeParamMap){},
     "application/json1":function (ajaxContent,typeParamMap){},
     "application/json1":function (ajaxContent,typeParamMap){},

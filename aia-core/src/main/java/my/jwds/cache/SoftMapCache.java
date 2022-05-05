@@ -12,7 +12,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 软引用Map缓存，内存不足抛出异常
- * 此类是为了扫描加载Api时内存不足对用户做出提醒
+ * 此类是为了内存不足对用户做出提醒
  * @param <K>
  * @param <V>
  */

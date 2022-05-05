@@ -1,13 +1,13 @@
 package my.jwds.springweb;
 
 import my.jwds.config.AiaConfigHolder;
+import my.jwds.core.AiaContext;
 import my.jwds.core.api.mgt.AiaApiManager;
 import my.jwds.core.api.mgt.DefaultAiaApiManager;
 import my.jwds.cache.CacheManager;
 import my.jwds.cache.DefaultCacheManager;
 import my.jwds.config.AiaConfig;
 import my.jwds.core.AiaApiScanner;
-import my.jwds.core.AiaManager;
 import my.jwds.core.security.QualifiedNameWhiteList;
 import my.jwds.core.security.SecuritySupport;
 import my.jwds.core.security.UrlWhiteList;
@@ -83,8 +83,8 @@ public class AiaSpringWebConfigure {
     }
 
     @Bean
-    public AiaManager aiaManager(AiaTemplateManager templateManager,AiaPluginManager pluginManager,AiaApiManager apiManager){
-        return new AiaManager(templateManager,pluginManager,apiManager);
+    public AiaContext aiaContext(AiaTemplateManager templateManager, AiaPluginManager pluginManager, AiaApiManager apiManager){
+        return new AiaContext(templateManager,pluginManager,apiManager);
     }
     @Bean
     public DefinitionResolver javadocDefinitionResolver(AiaConfig aiaConfig){
@@ -149,8 +149,8 @@ public class AiaSpringWebConfigure {
 
 
     @Bean
-    public AiaApiScanner aiaApiScanner(ApplicationContext applicationContext,SpringHandlerMappingParserComposite parserComposite,AiaManager aiaManager){
-        return new SpringWebAiaScanner(applicationContext,parserComposite,aiaManager);
+    public AiaApiScanner aiaApiScanner(ApplicationContext applicationContext,SpringHandlerMappingParserComposite parserComposite,AiaContext aiaContext){
+        return new SpringWebAiaScanner(applicationContext,parserComposite,aiaContext);
     }
 
     @Bean

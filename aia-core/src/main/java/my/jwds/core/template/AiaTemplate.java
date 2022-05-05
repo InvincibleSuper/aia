@@ -63,7 +63,7 @@ public class AiaTemplate {
 
 
 
-    class TemplateParam{
+    static class TemplateParam{
          String type;
          String value;
          boolean array;
@@ -92,6 +92,8 @@ public class AiaTemplate {
          }
 
 
+        public TemplateParam() {
+        }
 
         public TemplateParam(String type, String value) {
             this.type = type;

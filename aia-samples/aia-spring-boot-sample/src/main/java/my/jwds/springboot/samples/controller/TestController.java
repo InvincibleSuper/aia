@@ -69,6 +69,6 @@ public class TestController {
     @PostMapping(path = "/fileUp")
     @ResponseBody
     public Object fileUp(MultipartFile file){
-        return file;
+        return file.getName();
     }
 }

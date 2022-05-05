@@ -1,6 +1,6 @@
 package my.jwds.core.template;
 
-import my.jwds.core.AiaManager;
+import my.jwds.core.AiaContext;
 
 /**
  * 模板生成器，在api扫描器扫描到所有api后生成模板
@@ -9,16 +9,16 @@ public interface TemplateGenerator {
 
     /**
      * 生成模板
-     * @param aiaManager
+     * @param aiaContext
      */
-    void generate(AiaManager aiaManager);
+    void generate(AiaContext aiaContext);
 
 
 
     /**
      * 生成模板
-     * @param aiaManager
+     * @param aiaContext
      */
-    AiaTemplate generate(AiaManager aiaManager,String api);
+    AiaTemplate generate(AiaContext aiaContext,String api);
 
 }

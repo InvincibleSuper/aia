@@ -27,20 +27,20 @@ public interface AiaTemplateManager {
      * @param name 名称
      * @param template 模板
      */
-    void updateTemplate(String name,AiaTemplate template);
+    void updateTemplate(AiaTemplate template);
 
     /**
      * 全部模板
      * @return 全部模板
      */
-    Map<String,Map<InvokeUrl,AiaTemplate>> allTemplate();
+    Map<String,Map<String,AiaTemplate>> allTemplate();
 
     /**
      * 根据组获取模板
      * @param group 根据组获取模板
      * @return
      */
-    Map<InvokeUrl,AiaTemplate> getGroupTemplate(String group);
+    Map<String,AiaTemplate> getGroupTemplate(String group);
 
 
     /**

@@ -10,7 +10,7 @@ public class DefaultAiaTemplateManager implements AiaTemplateManager{
 
 
 
-    private Cache<String, Map<InvokeUrl, AiaTemplate>> cache;
+    private Cache<String, Map<String, AiaTemplate>> cache;
 
     private Comparator<AiaTemplate> templateComparator = new DefaultTemplateComparator();
 
@@ -23,7 +23,7 @@ public class DefaultAiaTemplateManager implements AiaTemplateManager{
 
     @Override
     public void addTemplate(AiaTemplate template) {
-        ensureContent(template.getGroup()).put(template.getUrl(),template);
+        ensureContent(template.getGroup()).put(template.getName(),template);
 
     }
 
@@ -33,13 +33,13 @@ public class DefaultAiaTemplateManager implements AiaTemplateManager{
     }
 
     @Override
-    public void updateTemplate(String name, AiaTemplate template) {
-        ensureContent(template.getGroup()).put(template.getUrl(), template);
+    public void updateTemplate(AiaTemplate template) {
+        ensureContent(template.getGroup()).put(template.getName(), template);
     }
 
     @Override
-    public Map<String, Map<InvokeUrl, AiaTemplate>> allTemplate() {
-        Map<String, Map<InvokeUrl, AiaTemplate>> res = new LinkedHashMap<>();
+    public Map<String, Map<String, AiaTemplate>> allTemplate() {
+        Map<String, Map<String, AiaTemplate>> res = new LinkedHashMap<>();
         for (String key : cache.keys()) {
             res.put(key,cache.get(key));
         }
@@ -47,12 +47,12 @@ public class DefaultAiaTemplateManager implements AiaTemplateManager{
     }
 
     @Override
-    public Map<InvokeUrl, AiaTemplate> getGroupTemplate(String group) {
+    public Map<String, AiaTemplate> getGroupTemplate(String group) {
         return cache.get(group);
     }
 
-    private Map<InvokeUrl,AiaTemplate> ensureContent(String group){
-        Map<InvokeUrl,AiaTemplate> res = cache.get(group);
+    private Map<String,AiaTemplate> ensureContent(String group){
+        Map<String,AiaTemplate> res = cache.get(group);
         if (res == null){
             res = new LinkedHashMap<>();
             cache.put(group,res);
@@ -63,8 +63,8 @@ public class DefaultAiaTemplateManager implements AiaTemplateManager{
     @Override
     public Map<String, List<AiaTemplate>> getGroupTemplateMap() {
         Map<String, List<AiaTemplate>> res = new LinkedHashMap<>();
-        Map<String, Map<InvokeUrl, AiaTemplate>> allTemplate = allTemplate();
-        for (Map.Entry<String, Map<InvokeUrl, AiaTemplate>> entry : allTemplate.entrySet()) {
+        Map<String, Map<String, AiaTemplate>> allTemplate = allTemplate();
+        for (Map.Entry<String, Map<String, AiaTemplate>> entry : allTemplate.entrySet()) {
             List<AiaTemplate> list = new ArrayList(entry.getValue().values());
             list.sort(templateComparator);
             res.put(entry.getKey(),list);

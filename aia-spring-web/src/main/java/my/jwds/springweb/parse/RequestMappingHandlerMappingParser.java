@@ -1,10 +1,10 @@
 package my.jwds.springweb.parse;
 
 import com.alibaba.fastjson.JSONObject;
+import my.jwds.core.AiaContext;
 import my.jwds.core.api.*;
 import my.jwds.core.api.definition.MethodDefinition;
 import my.jwds.core.api.definition.resolver.DefinitionResolver;
-import my.jwds.core.AiaManager;
 import my.jwds.core.model.ModelProperty;
 import my.jwds.core.model.resolver.ModelResolver;
 import my.jwds.core.security.SecuritySupport;
@@ -66,18 +66,18 @@ public class RequestMappingHandlerMappingParser extends AbstractHandlerMappingPa
     /**
      * 解析 Spring的RequestMappingHandlerMapping
      * 获取RequestMappingInfo，并且对方法参数注解进行判断
-     * @param aiaManager 总管理器
+     * @param aiaContext 总管理器
      * @param handlerMapping spring请求处理映射
      */
     @Override
-    protected void onParse(AiaManager aiaManager,  HandlerMapping handlerMapping) {
+    protected void onParse(AiaContext aiaContext, HandlerMapping handlerMapping) {
         RequestMappingHandlerMapping r = (RequestMappingHandlerMapping) handlerMapping;
         Map<RequestMappingInfo, HandlerMethod> handlerMethods = r.getHandlerMethods();
         List<InvokeApi> result = new ArrayList<>();
         handlerMethods.forEach((requestMappingInfo, handlerMethod) -> {
             result.addAll(createInvokeApi(requestMappingInfo,handlerMethod));
         });
-        aiaManager.addAll(result);
+        aiaContext.getApiManager().addAll(result);
     }
 
 
@@ -131,13 +131,11 @@ public class RequestMappingHandlerMappingParser extends AbstractHandlerMappingPa
                     break;
                 }
             }
+            if (contentType == null){
+                contentType = producesMediaType.iterator().next();
+            }
         }
-        if (contentType == null){
-            headers.put("Content-Type","no-support");
-        }else{
-            headers.put("Content-Type",contentType.toString());
-        }
-
+        headers.put("Content-Type",contentType.toString());
     }
 
     protected ArrayList<InvokeUrl> createInvokeUrl(RequestMappingInfo requestMappingInfo){

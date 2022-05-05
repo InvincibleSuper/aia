@@ -1,9 +1,7 @@
 package my.jwds.core.template;
 
 import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.JSONPObject;
-import jdk.nashorn.internal.parser.JSONParser;
-import my.jwds.core.AiaManager;
+import my.jwds.core.AiaContext;
 import my.jwds.core.api.InvokeApi;
 import my.jwds.core.api.InvokeContentType;
 import my.jwds.core.api.InvokeParam;
@@ -11,7 +9,6 @@ import my.jwds.core.model.*;
 import my.jwds.utils.ModelUtils;
 import my.jwds.utils.StringUtils;
 
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,14 +21,14 @@ public class DefaultTemplateGenerator implements TemplateGenerator{
     /**
      * 生成模板
      *
-     * @param aiaManager
+     * @param aiaContext
      */
     @Override
-    public void generate(AiaManager aiaManager) {
-        aiaManager.allApi().forEach((group,apis)->{
+    public void generate(AiaContext aiaContext) {
+        aiaContext.getApiManager().allApi().forEach((group,apis)->{
             for (InvokeApi invokeApi : apis) {
                 AiaTemplate template = generateTemplate(invokeApi);
-                aiaManager.addTemplate(template);
+                aiaContext.getTemplateManager().addTemplate(template);
             }
         });
 
@@ -40,12 +37,12 @@ public class DefaultTemplateGenerator implements TemplateGenerator{
     /**
      * 生成模板
      *
-     * @param aiaManager
+     * @param aiaContext
      * @param api
      */
     @Override
-    public AiaTemplate generate(AiaManager aiaManager, String api) {
-        InvokeApi invokeApi = aiaManager.searchApi(api);
+    public AiaTemplate generate(AiaContext aiaContext, String api) {
+        InvokeApi invokeApi = aiaContext.getApiManager().searchApi(api);
         if (invokeApi == null)return null;
         return generateTemplate(invokeApi);
     }

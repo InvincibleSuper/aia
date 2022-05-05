@@ -1,5 +1,6 @@
 package my.jwds.springboot.configure;
 
+import my.jwds.core.AiaContext;
 import my.jwds.core.api.definition.resolver.DefinitionResolver;
 import my.jwds.core.api.definition.resolver.JavadocDefinitionResolver;
 import my.jwds.core.api.definition.resolver.PriorityDefinitionResolver;
@@ -7,18 +8,13 @@ import my.jwds.core.api.mgt.AiaApiManager;
 import my.jwds.cache.CacheManager;
 import my.jwds.config.AiaConfig;
 import my.jwds.core.AiaApiScanner;
-import my.jwds.core.AiaManager;
-import my.jwds.core.security.QualifiedNameWhiteList;
 import my.jwds.core.security.SecuritySupport;
-import my.jwds.core.security.UrlWhiteList;
 import my.jwds.core.template.AiaTemplateManager;
 import my.jwds.core.model.resolver.ModelResolver;
 import my.jwds.core.plugin.mgt.AiaPluginManager;
-import my.jwds.core.template.DefaultTemplateGenerator;
 import my.jwds.core.template.TemplateGenerator;
 import my.jwds.springweb.AiaSpringWebConfigure;
 import my.jwds.springweb.SpringWebAiaScanner;
-import my.jwds.springweb.data.AiaController;
 import my.jwds.springweb.parse.RequestMappingHandlerMappingParser;
 import my.jwds.springweb.parse.SpringHandlerMappingParserComposite;
 import my.jwds.springweb.parse.method.*;
@@ -27,7 +23,6 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
 
 import java.util.List;
 
@@ -67,8 +62,8 @@ public class AiaSpringBootConfigure extends AiaSpringWebConfigure {
 
     @Bean
     @ConditionalOnMissingBean
-    public AiaManager aiaManager(AiaTemplateManager templateManager,AiaPluginManager pluginManager,AiaApiManager apiManager){
-        return super.aiaManager(templateManager,pluginManager,apiManager);
+    public AiaContext aiaContext(AiaTemplateManager templateManager, AiaPluginManager pluginManager, AiaApiManager apiManager){
+        return super.aiaContext(templateManager,pluginManager,apiManager);
     }
 
     @Bean
@@ -150,8 +145,8 @@ public class AiaSpringBootConfigure extends AiaSpringWebConfigure {
 
     @Bean
     @ConditionalOnMissingBean
-    public AiaApiScanner aiaApiScanner(ApplicationContext applicationContext,SpringHandlerMappingParserComposite parserComposite,AiaManager aiaManager){
-        return new SpringWebAiaScanner(applicationContext,parserComposite,aiaManager);
+    public AiaApiScanner aiaApiScanner(ApplicationContext applicationContext,SpringHandlerMappingParserComposite parserComposite,AiaContext aiaContext){
+        return new SpringWebAiaScanner(applicationContext,parserComposite,aiaContext);
     }
 
     @Bean

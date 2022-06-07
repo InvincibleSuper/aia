@@ -59,10 +59,7 @@ var contentTypeFunMap = {
             }
         }
 
-    },
-    "application/json1":function (ajaxContent,typeParamMap){},
-    "application/json1":function (ajaxContent,typeParamMap){},
-    "application/json1":function (ajaxContent,typeParamMap){},
+    }
 }
 
 

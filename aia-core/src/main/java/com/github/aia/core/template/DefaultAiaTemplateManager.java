@@ -23,7 +23,6 @@ public class DefaultAiaTemplateManager implements AiaTemplateManager{
     @Override
     public void addTemplate(AiaTemplate template) {
         ensureContent(template.getGroup()).put(template.getName(),template);
-
     }
 
     @Override
@@ -69,5 +68,20 @@ public class DefaultAiaTemplateManager implements AiaTemplateManager{
             res.put(entry.getKey(),list);
         }
         return res;
+    }
+
+
+    /**
+     * 是否包含此模板
+     *
+     * @param template
+     * @return
+     */
+    @Override
+    public boolean contains(AiaTemplate template) {
+        Map map = getGroupTemplate(template.getGroup());
+
+
+        return map != null && map.containsKey(template.getName());
     }
 }

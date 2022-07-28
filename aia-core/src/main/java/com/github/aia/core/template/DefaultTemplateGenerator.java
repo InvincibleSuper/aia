@@ -31,6 +31,13 @@ public class DefaultTemplateGenerator implements TemplateGenerator{
         aiaContext.getApiManager().allApi().forEach((group,apis)->{
             for (InvokeApi invokeApi : apis) {
                 AiaTemplate template = generateTemplate(invokeApi);
+                while (aiaContext.getTemplateManager().contains(template)){
+                    if (template.getName().startsWith(template.getUrl().getMethod()) ){
+                        template.setName(template.getName() + " -副本");
+                    }else{
+                        template.setName(template.getUrl().getMethod() + " " + template.getName());
+                    }
+                }
                 aiaContext.getTemplateManager().addTemplate(template);
             }
         });

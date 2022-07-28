@@ -25,12 +25,17 @@ function newArrayList(){
             }
         },
         remove:function (index){
-            for (let i = index; i < this.size-1; i++) {
-                this.items[i] = (this.items[i+1])
+            if (index == this.items.length - 1){
+                this.items[index] = null
+            }else{
+                for (let i = index; i < this.size; i++) {
+                    this.items[i] = (this.items[i+1])
+                }
             }
             this.size --;
         },
         get:function (index){
+            if (index <0 || index >= this.size)return null;
             return this.items[index];
         }
 
@@ -38,3 +43,4 @@ function newArrayList(){
     }
 }
 
+export default {newArrayList}

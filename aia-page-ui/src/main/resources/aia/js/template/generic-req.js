@@ -1,4 +1,4 @@
-contentGenericReq = function (ajaxContent,contentType,typeParamMap) {
+var contentGenericReq = function (ajaxContent,contentType,typeParamMap) {
     processUrl(ajaxContent,typeParamMap)
     if ( contentTypeFunMap[contentType] == null){
         contentTypeFunMap['other'](ajaxContent,typeParamMap,contentType)
@@ -6,6 +6,7 @@ contentGenericReq = function (ajaxContent,contentType,typeParamMap) {
         contentTypeFunMap[contentType](ajaxContent,typeParamMap)
     }
 }
+export default contentGenericReq;
 var contentTypeFunMap = {
     "multipart/form-data":function (ajaxContent,typeParamMap){
         ajaxContent['processData'] = false;

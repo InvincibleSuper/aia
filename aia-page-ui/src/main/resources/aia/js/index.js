@@ -1,3 +1,8 @@
+
+import collections from "./utils/collection.js";
+
+import {storeAiaData, storeChooseInfo} from "./utils/other-utils.js"
+
 var pageType = null
 
 var pageTypeIcon = {
@@ -6,28 +11,35 @@ var pageTypeIcon = {
     "plugin":"glyphicon glyphicon-wrench"
 }
 
-var allData = {}
 
+
+
+var initUrl = {'template':'info/template','api':'info/api','plugin':'info/plugin'}
+var allData = {}
 var map = {
 
 }
 
+function startData(){
+    for (let pageType in initUrl) {
+        getAiaData(initUrl[pageType],pageType);
+    }
+    storeAiaData(allData);
+}
+
+
 /**
- * 初始化
+ * 初始化定时器
  */
 var init;
-function aiaInit(){
-    $('.aia').hide();
-    $('.jumbotron').hide();
-    init = setInterval(isScan(),500)
 
-}
 function isScan(){
     var scan = isComplete()
     if (scan){
         clearInterval(init)
         $('.aia').show();
         $('.jumbotron').hide();
+        startData()
         initNav()
         $('.nav-sidebar>li[name=template]').click();
     }else{
@@ -52,11 +64,10 @@ function isComplete(){
  * 侧边栏模块
  */
 function initNav(){
-    $('.nav-sidebar>li').click(function (){
+    $('.nav-sidebar>li').off('click').click(function (){
         $('.nav-sidebar>li').removeClass("active");
         $(this).addClass("active");
         var currentPageType = $(this).attr('name');
-        getAiaData($(this).attr('url'),currentPageType)
         if (pageType != currentPageType){
             pageType = currentPageType;
             initContent();
@@ -75,7 +86,7 @@ function getAiaData(url,currentPageType){
             }
         });
 
-        map[currentPageType] = newArrayList();
+        map[currentPageType] = collections.newArrayList();
         for (let group in  allData[currentPageType]) {
             for (let info of allData[currentPageType][group]) {
                map[currentPageType].add(info);
@@ -169,12 +180,17 @@ function initContent(){
         "collapseIcon":"glyphicon glyphicon-chevron-up",
         "borderColor":"white",
         onNodeSelected: function(event, data) {
+
             if (data.unique != null){
                 openInvoke(data)
             }
-
         }
     })
+    var history = gainHistoryPage()
+    if (history != null){
+        selectItem(history.pageType,history.nodeId)
+    }
+
 }
 
 
@@ -182,41 +198,63 @@ function openInvoke(data){
     $('.invoke-content-items>.invoke-content-item').hide();
     $('.invoke-tabs>.nav-tabs>li').removeClass("active");
     if ($('.invoke-content-item[unique="'+data.unique+'"]').length == 0){
-        chooseInfo = map[data.pageType].get(data.index)
+        storeChooseInfo(map[data.pageType].get(data.index))
         $('.invoke-content-items')
             .append(getFrameHtml(data.unique,data.url));
         $('.invoke-tabs>.nav-tabs')
-            .append(getTabHtml(data.unique,data.tabName));
+            .append(getTabHtml(data.unique,data.tabName,data.nodeId));
     }
 
+    storeNowPage(data.pageType,data.nodeId);
     $('.invoke-tabs>.nav-tabs>li[unique="'+data.unique+'"]').addClass("active");
     $('.invoke-content-items>.invoke-content-item[unique="'+data.unique+'"]').show();
+
     invokeInit()
 }
 
+function storeNowPage(pageType,nodeId){
+    var url = window.location.href
+    window.location.href = url.substring(0,url.indexOf('#')) + '#'+pageType+':'+nodeId
+}
+
+function gainHistoryPage(){
+    var url = window.location.href
+    var parseStr = url.substring(url.lastIndexOf('#')+1)
+    var parseArr = parseStr.split(':')
+    if (parseArr.length != 2)return null;
+    return {
+        pageType:parseArr[0],
+        nodeId:parseInt(parseArr[1])
+    }
+}
+
+function selectItem(pageType,nodeId){
+    $('li[name='+pageType+']').click()
+    $('.content-tree').treeview('selectNode',nodeId,{silent:true})
+}
 
 /**
  * 执行区域模块
  */
-
-var chooseInfo = null;
-
 function invokeInit(){
-    $('.invoke>.invoke-tabs>.nav-tabs>li').click(function (){
+    $('.invoke>.invoke-tabs>.nav-tabs>li').off('click').click(function (){
         $('.invoke>.invoke-tabs>.nav-tabs>li').removeClass("active");
         $(this).addClass("active");
         var unique = $(this).attr('unique')
         $('.invoke-content-items>.invoke-content-item').hide();
         $('.invoke-content-items>.invoke-content-item[unique="'+unique+'"]').show();
+        var type = unique.substring(0,unique.indexOf('_'))
+        var nodeId = parseInt($(this).attr('nodeid'))
+        selectItem(type,nodeId)
     })
 
-    $('.invoke>.invoke-tabs>.nav-tabs>li').hover(function (){
+    $('.invoke>.invoke-tabs>.nav-tabs>li').off('hover').hover(function (){
         $('.invoke .tab-close').hide();
         $(this).find('.tab-close').css('display','block');
     },function (){
         $('.invoke .tab-close').hide();
     })
-    $(".invoke .tab-close").click(function (){
+    $(".invoke .tab-close").off('click').click(function (){
         var chooseTab = $(this).parent().parent();
         var unique = chooseTab.attr('unique')
         if (chooseTab.attr('class').indexOf("active") != -1){
@@ -234,19 +272,20 @@ function invokeInit(){
 
 
 function getFrameHtml(unique,url){
-
-
     var frameHtml ='<iframe class="embed-responsive-item invoke-content-item" src="page/'+pageType+'.html" unique="'+unique+'"></iframe>';
     return frameHtml;
 }
 
-function getTabHtml(unique,tabName){
-    var tabHtml = '<li class="active" unique="'+unique+'" ><a href="#"><span class="'+pageTypeIcon[pageType]+'"></span> '+tabName+' <span class="glyphicon glyphicon-remove tab-close"></span></a></li>'
+function getTabHtml(unique,tabName,nodeId){
+    var tabHtml = '<li class="active" unique="'+unique+'" nodeid="'+nodeId+'"><a href="#">' +
+        '<span class="'+pageTypeIcon[pageType]+'"></span> '+tabName+' <span class="glyphicon glyphicon-remove tab-close"></span></a></li>'
     return tabHtml;
 }
 
 
-function searchData(chooseInfo){
+(function aiaInit(){
+    $('.aia').hide();
+    $('.jumbotron').hide();
+    init = setInterval(isScan(),500)
+})();
 
-}
-aiaInit();

@@ -1,8 +1,8 @@
 aia:
   persist: true
   patternQualifiedNames:
-    "com.github.aia.springboot.samples.controller.TestController.**"
-  enable: false
+    "com.github.aia.springboot.samples.controller.**"
+  enable: true
 spring:
   mvc:
     view:

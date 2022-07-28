@@ -1,17 +1,26 @@
-var info = parent.chooseInfo
-var filterHeaders ;
-var contentGenericReq;
-var baseUrl = null;
-var templateDoms = newArrayList();
 
-function start(){
+import tpUtils from './template/template-dom-function.js';
+import filterHeader from './template/header-filter.js';
+import collections from './utils/collection.js';
+import {gainAiaDataByType, gainChooseInfo} from './utils/other-utils.js';
+
+
+
+var info
+var baseUrl = null;
+var templateDoms = collections.newArrayList();
+var templateHtml = $('.samples #template-sample').html();
+var templateChainItemHtml = $('.samples #template-chain-sample').html();
+
+(function start(){
+    info = gainChooseInfo();
     parseChain(info)
     initChainDom()
     InitTemplateRelevanceChainDom();
 
     $('.response-type-option').click(resTypeClick)
     baseUrl = location.href.substring(0,location.href.lastIndexOf("/aia"))
-}
+})()
 
 function sendReq(){
 
@@ -48,9 +57,9 @@ function addTemplate(templateDom,api){
             alert('没有此api')
             return;
         }
-        var index = getIndex(templateDom);
+        var index = templateDom.getIndex();
         var newTemplateDom = templateDomInit(data,index+1);
-        templateDoms.addIndex(getIndex(newTemplateDom),newTemplateDom)
+        templateDoms.addIndex(newTemplateDom.getIndex(),newTemplateDom)
         for (let i = index+2; i < templateDoms.size; i++) {
             templateDoms.get(i).attr('id',i)
             templateDoms.get(i).val(i);
@@ -63,14 +72,27 @@ function addTemplate(templateDom,api){
 
 
 function addTemplateAfter(template,addTemplate){
-    addTemplate.next = template.next;
-    template.next = addTemplate;
+    if (template == null){
+        info = addTemplate;
+    }else{
+        addTemplate.next = template.next;
+        template.next = addTemplate;
+    }
+    updateTemplate()
+}
+
+function minusTemplate(template,minusTemplate){
+    if (template == null){
+        info = minusTemplate.next;
+    }else{
+        template.next = minusTemplate.next;
+    }
     updateTemplate()
 }
 
 
+
 function updateTemplate(){
-    console.log(info)
     $.ajax({
         url:'../info/updateTemplate',
         type:'post',
@@ -85,13 +107,12 @@ function updateTemplate(){
 
 
 
-function getIndex(templateDom){
-    return templateDom.val()*1;
-}
+
 
 
 function templateDomInit(template,index){
     var templateDom = $(templateHtml)
+    templateDom.context = templateDoms
     templateDom.template = template;
     templateDom.attr('id',index)
     templateDom.val(index);
@@ -105,90 +126,7 @@ function templateDomInit(template,index){
     templateDom.responseText = null
     templateDom.resType = 'TEXT'
     templateButtonInit(templateDom)
-
-    templateDom.sendReq = function (){
-        var templateDom = this
-        var index = getIndex(templateDom)
-        var template = this.template;
-        for (let i = 0; i <= index; i++) {
-            if (!templateDoms.get(i).find('.header-input form').valid())return false;
-        }
-
-        var ajaxContent = {
-            templateDom:templateDom,
-            url:templateDom.find('.url').val(),
-            type:template.url.method,
-            async:false,
-            complete:templateDom.processRes
-        }
-        var headerValues = templateDom.find('.header-value')
-        var headers = {}
-        for (let headerValueHtml of headerValues) {
-            var headerValue = $(headerValueHtml)
-            var input = headerValue.find('.form-control')
-            headers[input.attr('name')] = input.val()
-            template.headers[input.attr('name')] = input.val()
-        }
-        ajaxContent['headers'] = headers;
-        var paramValues = templateDom.find('.param-value')
-        var typeParamMap = {}
-        for (let paramValueHtml of paramValues) {
-            var paramValue = $(paramValueHtml)
-            var input = paramValue.find('.form-control')
-            var inputType = input.attr('type'),name = paramValue.prev().find('.param-name-text').text();
-            var param = {};
-            if (inputType == 'file'){
-                param.val = input[0].files
-            }else{
-                param.val = input.val()
-                template.params[name].value = param.val
-            }
-            param.metadata = template.params[name]
-            if (typeParamMap[param.metadata.type] == null){
-                typeParamMap[param.metadata.type] = []
-            }
-            typeParamMap[param.metadata.type].push(param)
-        }
-        contentGenericReq(ajaxContent, template.headers["Content-Type"],typeParamMap);
-        ajaxContent.url = baseUrl + ajaxContent.url
-        $.ajax(ajaxContent)
-        return true;
-    }
-
-
-    templateDom.processRes = function (res){
-        var templateDom = this.templateDom
-        var responseStatus = templateDom.find('.response-status');
-        responseStatus.show();
-        if (res.status == 200){
-           responseStatus.removeClass('alert-danger')
-           responseStatus.addClass('alert-success')
-           responseStatus.text('请求成功')
-        }else{
-            responseStatus.removeClass('alert-success')
-            responseStatus.addClass('alert-danger')
-            responseStatus.text('请求失败')
-        }
-        var contentType = res.getResponseHeader('content-type')
-        if (contentType!=null && contentType.substring(contentType.indexOf('/')+1).toLowerCase() == 'json'){
-            templateDom.resType = 'JSON'
-            templateDom.find('.response-type-btn-text').text(templateDom.resType)
-        }
-        templateDom.responseText = res.responseText
-        templateDom.processResType();
-    }
-
-
-    templateDom.processResType = function (){
-        if (this.resType == 'TEXT'){
-            this.find('.response-value').text(this.responseText);
-        }else if (this.resType == 'JSON'){
-            this.find('.response-value').jsonViewer(JSON.parse(this.responseText));
-        }else if (this.resType == 'HTML'){
-            this.find('.response-value').html(this.responseText)
-        }
-        this.find('.response-type-btn-text').text(this.resType)
-    }
+    Object.assign(templateDom,tpUtils)
     return templateDom
 }
 
@@ -217,15 +155,7 @@ function processHeaders(templateDom,headers){
     }
 }
 
-function filterHeader(headerName,headerValue){
-    for (let excludeHeader of Object.keys(filterHeaders)) {
-        if (headerName.toLowerCase() == excludeHeader.toLowerCase()){
-            filterHeaders[excludeHeader](headerValue);
-            return true;
-        }
-    }
-    return false;
-}
+
 
 function processParam(templateDom,params){
     if (params == null||Object.keys(params).length == 0){
@@ -346,8 +276,9 @@ function templateButtonInit(templateDom){
         });
     })
     templateDom.find('.template-minus').click(function (){
-        if (templateDoms.size > 1){
-            var index = getIndex(templateDom)
+        if (templateDom.getIndex() != 0){
+            var index = templateDom.getIndex();
+            minusTemplate(templateDoms.get(index-1).template,templateDom.template)
             templateDoms.remove(index)
             templateDom.remove()
             for (let i = index; i < templateDoms.size; i++) {
@@ -355,8 +286,9 @@ function templateButtonInit(templateDom){
                 templateDoms.get(i).attr('id',i)
             }
             initChainDom()
+
         }else{
-            layer.msg('不能删除最后一个模板', {
+            layer.msg('不能删除第一个模板', {
                 icon: 2,
                 time: 1000
             },);
@@ -369,7 +301,7 @@ function apiTreeInit(templateDom){
     var tree = layui.tree;
     var layer = layui.layer
 
-    var apiData = parent.getAiaData('info/api','api')
+    var apiData = gainAiaDataByType("api")
     var treeData = [];
     for (let group in apiData) {
         var item = {
@@ -441,6 +373,3 @@ function scrollIntoView(into,container){
     return false;
 }
 
-var templateHtml = $('.samples #template-sample').html();
-
-var templateChainItemHtml = $('.samples #template-chain-sample').html();

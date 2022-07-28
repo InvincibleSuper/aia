@@ -138,11 +138,14 @@ public class RequestMappingHandlerMappingParser extends AbstractHandlerMappingPa
         headers.put("Content-Type",contentType.toString());
     }
 
+
+    List<RequestMethod> defaultMethod = Arrays.asList(RequestMethod.GET,RequestMethod.POST,RequestMethod.PUT,RequestMethod.DELETE);
     protected ArrayList<InvokeUrl> createInvokeUrl(RequestMappingInfo requestMappingInfo){
         ArrayList<InvokeUrl> res = new ArrayList<>();
         Set<String> paths = requestMappingInfo.getPatternValues();
         for (String path : paths) {
-            for (RequestMethod method : requestMappingInfo.getMethodsCondition().getMethods()) {
+            Collection<RequestMethod> requestMethods = requestMappingInfo.getMethodsCondition().isEmpty() ? defaultMethod:requestMappingInfo.getMethodsCondition().getMethods();
+            for (RequestMethod method : requestMethods) {
                 InvokeUrl invokeUrl = new InvokeUrl();
                 invokeUrl.setUrl(path);
                 invokeUrl.setMethod(method.name());

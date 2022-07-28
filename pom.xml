@@ -4,10 +4,10 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>my.jwds</groupId>
-    <artifactId>aia</artifactId>
+    <groupId>com.github.aia</groupId>
+    <artifactId>aia-all</artifactId>
     <packaging>pom</packaging>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0</version>
     <modules>
         <module>aia-core</module>
         <module>aia-spring-boot-web-starter</module>
@@ -19,7 +19,7 @@
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
-        <aia.version>1.0-SNAPSHOT</aia.version>
+        <aia.version>1.0</aia.version>
         <spring.boot.version>2.5.4</spring.boot.version>
         <fastjson.version>1.2.78</fastjson.version>
     </properties>
@@ -27,23 +27,23 @@
         <dependencies>
 
             <dependency>
-                <groupId>my.jwds</groupId>
+                <groupId>com.github.aia</groupId>
                 <artifactId>aia-core</artifactId>
                 <version>${aia.version}</version>
             </dependency>
             <dependency>
-                <groupId>my.jwds</groupId>
+                <groupId>com.github.aia</groupId>
                 <artifactId>aia-page-ui</artifactId>
                 <version>${aia.version}</version>
             </dependency>
             <dependency>
-                <groupId>my.jwds</groupId>
+                <groupId>com.github.aia</groupId>
                 <artifactId>aia-spring-web</artifactId>
                 <version>${aia.version}</version>
             </dependency>
 
             <dependency>
-                <groupId>my.jwds</groupId>
+                <groupId>com.github.aia</groupId>
                 <artifactId>aia-spring-boot-web-starter</artifactId>
                 <version>${aia.version}</version>
             </dependency>

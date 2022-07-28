@@ -1,5 +1,7 @@
 package com.github.aia.core.template;
 
+import com.sun.org.apache.xalan.internal.xsltc.compiler.Template;
+
 import java.util.List;
 import java.util.Map;
 
@@ -46,4 +48,12 @@ public interface AiaTemplateManager {
      * @return
      */
     Map<String, List<AiaTemplate>> getGroupTemplateMap();
+
+
+    /**
+     * 是否包含此模板
+     * @param template
+     * @return
+     */
+    boolean contains(AiaTemplate template);
 }

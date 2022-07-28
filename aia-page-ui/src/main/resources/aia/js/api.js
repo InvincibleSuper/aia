@@ -1,14 +1,18 @@
-var info = parent.chooseInfo
+
+import {gainChooseInfo} from './utils/other-utils.js';
+var info = gainChooseInfo();
 
 
-function initApi(){
-    $(".method").text(info.url.method);
+
+
+(function initApi(){
+    $(".method").text(info['url']['method']);
     $(".url-text").text(info.url.url)
     $(".definition").html(info.definition == null || info.definition == "" ? "这个请求没有说明":info.definition.replaceAll('\n','<br/>'))
     initHeaders()
     initParams()
     initResultValue()
-}
+})()
 
 function initHeaders(){
     if (Object.keys(info.headers).length == 0) {
@@ -34,45 +38,82 @@ function initParams(){
             params.push(param.model)
             params[params.length-1]['contentType'] = param.contentType
         }
-        parse(params,"",$('.param-table'))
+        var data = []
+        parse(params,"",data)
+
+        var $table = $('#request-table')
+        startTree($table,data,[{
+            field: 'name',
+            title: '名称',
+        },{
+            field: 'contentType',
+            title: '参数类型'
+        },{
+            field: 'type',
+            title: '数据类型'
+        },{
+            field:'definition',
+            title:'说明'
+        }]);
     }
 }
 
-function parse(params,prevText,appendNode,flag){
-    if (params==null)return "";
-    var prefix = "";
-    if (prevText.length != 0)prefix = prevText+"└"
+function startTree($table,data,columns){
+
+    $table.bootstrapTable({
+        data: data,
+        idField: 'id',
+        dataType: 'jsonp',
+        columns: columns,
+
+        //在哪一列展开树形
+        treeShowField: 'name',
+        //指定父id列
+        parentIdField: 'pid',
+        onResetView: function(data) {
+            //console.log('load');
+            $table.treegrid({
+                // initialState: 'collapsed', // 所有节点都折叠
+                initialState: 'expanded',// 所有节点都展开，默认展开
+                treeColumn: 0,
+                expanderExpandedClass: 'glyphicon glyphicon-chevron-up',  //图标样式
+                expanderCollapsedClass: 'glyphicon glyphicon-chevron-down',
+                onChange: function() {
+                    $table.bootstrapTable('resetWidth');
+                }
+            });
+            //只展开树形的第一级节点
+            //$table.treegrid('getRootNodes').treegrid('expand');
+
+        },
+    });
+}
+
+function parse(params,pid,data){
+    if (params==null)return pid;
+
+    var id = parseInt(pid+1);
     for (let i = 0; i < params.length; i++) {
-        var name = prefix+params[i].name
-        var contentType = params[i].contentType
-        var type = params[i].type
-        var definition = params[i].definition
-        var value = params[i].value
-        if (contentType == null)contentType = "/"
-        if (value == null)value=""
-        if (definition == null)definition = "无"
-        var tr = $('<tr></tr>')
-        tr.append($('<td></td>').html(name))
-        if (flag == null)tr.append($('<td></td>').text(contentType));
-        tr.append($('<td></td>').text(type))
-        tr.append($('<td></td>').text(definition))
-        appendNode.append(tr)
-        var nextText = prevText+"&nbsp&nbsp"
+        data.push({
+            id:id,
+            pid:pid,
+            name:params[i].name,
+            contentType:params[i].contentType,
+            type:params[i].type,
+            definition:params[i].definition,
+            value:params[i].value
+        })
 
         if (params[i].model != null){
-            parse(params[i].model.properties,nextText,appendNode,flag)
-        }else if (params[i].containerContent != null){
-            var key = params[i].containerContent[0]
-            key['name'] = 'key'
-            var mapValue = params[i].containerContent[1]
-            mapValue['name'] = 'value'
-            parse([key],nextText,appendNode,flag)
-            parse([mapValue],nextText,appendNode,flag)
+            id= parse(params[i].model.properties,id,data)
         }else if (params[i].component != null){
             params[i].component['name'] = 'item'
-            parse([params[i].component],nextText,appendNode,flag)
+            id = parse([params[i].component],id,data)
         }
+
+        id++;
     }
+    return id;
 }
 
 function initResultValue(){
@@ -87,8 +128,19 @@ function initResultValue(){
     }else{
         $('.return-table').html("")
         var params = [info.returnValue.returnModel]
-        parse(params,"",$('.return-table'),false)
+        var data = []
+        parse(params,"",data)
+        var $table = $('#response-table')
+        startTree($table,data,[{
+            field: 'name',
+            title: '名称',
+        },{
+            field: 'type',
+            title: '数据类型'
+        },{
+            field:'definition',
+            title:'说明'
+        }]);
         $('.return-example').jsonViewer(JSON.parse(info.returnValue.example))
     }
 }
-initApi()

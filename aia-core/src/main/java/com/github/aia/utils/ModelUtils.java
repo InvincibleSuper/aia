@@ -27,9 +27,9 @@ public class ModelUtils {
             return ((SimpleModelProperty) modelProperty).getValue();
         }else if (modelProperty instanceof ObjectModelProperty){
             ObjectModelProperty thisModel = (ObjectModelProperty) modelProperty;
-            Map<String,Object> res = new LinkedHashMap<>();
+            Map res = new LinkedHashMap<>();
             if (thisModel.getModel() != null){
-                Map<String,Object> map = new LinkedHashMap<>();
+                Map map = new LinkedHashMap<>();
                 if (thisModel.getModel().getProperties() == null){
                     map.put(thisModel.getName(),null);
                 }else{
@@ -40,7 +40,7 @@ public class ModelUtils {
 
                 res.putAll(map);
             }else{
-                res.put("String",toMap(thisModel.getContainerContent()[1]));
+                res.put(toMap(thisModel.getContainerContent()[0]),toMap(thisModel.getContainerContent()[1]));
             }
             return res;
         }else{

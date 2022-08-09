@@ -16,7 +16,7 @@ var templateChainItemHtml = $('.samples #template-chain-sample').html();
     info = gainChooseInfo();
     parseChain(info)
     initChainDom()
-    InitTemplateRelevanceChainDom();
+    initTemplateRelevanceChainDom();
 
     $('.response-type-option').click(resTypeClick)
     baseUrl = location.href.substring(0,location.href.lastIndexOf("/aia"))
@@ -338,26 +338,30 @@ function apiTreeInit(templateDom){
 
 }
 
-function InitTemplateRelevanceChainDom(){
+function initTemplateRelevanceChainDom(){
     $(document).scroll(function(){
-        var current = $(document).scrollTop();
-        var height = $(window).height();
-        var windows = new Array(templateDoms.size+1)
-        for (let i = 0; i < templateDoms.size; i++) {
-            windows[i] = templateDoms.get(i).offset().top
-        }
-        windows[templateDoms.size] = $(document).height();
-        var max = 0,index = 0;
-        for (let i = 0; i < windows.length-1; i++) {
-            if (windows[i+1] < current)continue;
-            if (windows[i] > current+height)break;
-            var minOccupy = windows[i+1] > current+height?current+height : windows[i+1]
-            var c = windows[i] <= current ? minOccupy - current : minOccupy - windows[i];
-            if (c > max){
-                max = c;
-                index = i;
+        //当前滚动的距离
+        var current = document.documentElement.scrollTop;
+        //页面的总高度
+        var offsetHeight  = document.documentElement.offsetHeight
+        //页面的可视高度
+        var clientHeight = document.documentElement.clientHeight
+        //offsetHeight - clientHeight得出的就是滚动条最大滚动的长度。
+        //跟当前滚动距离相比较，相等则直接高亮最后的锚点
+        var index = 0;
+        if (current == offsetHeight - clientHeight){
+            index = templateDoms.size-1
+        }else{
+            var min = offsetHeight;
+            for (let i = 0; i < templateDoms.size; i++) {
+                var diff = Math.abs(templateDoms.get(i).offset().top - current);
+                if (min >= diff){
+                    min = diff;
+                    index = i;
+                }
             }
         }
+
         cancelActiveChooseChaining();
         activeChooseChaining($('.template-chain-item[value='+index+']'))
         $('.template-chain-item[value='+index+']')[0].scrollIntoView();

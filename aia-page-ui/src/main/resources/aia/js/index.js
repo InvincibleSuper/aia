@@ -41,7 +41,11 @@ function isScan(){
         $('.jumbotron').hide();
         startData()
         initNav()
-        $('.nav-sidebar>li[name=template]').click();
+        //将url上的历史重现
+        var history = gainHistoryPage()
+        if (history != null){
+            selectItem(history.pageType,history.nodeId)
+        }
     }else{
         $('.jumbotron').show();
     }
@@ -72,8 +76,8 @@ function initNav(){
             pageType = currentPageType;
             initContent();
         }
-
     })
+    $('.nav-sidebar>li[name=template]').click();
 }
 
 function getAiaData(url,currentPageType){
@@ -186,8 +190,11 @@ function initContent(){
             }
         }
     })
+
+
+    //将url上的历史重现
     var history = gainHistoryPage()
-    if (history != null){
+    if (history != null && history.pageType == pageType){
         selectItem(history.pageType,history.nodeId)
     }
 
@@ -277,7 +284,7 @@ function getFrameHtml(unique,url){
 }
 
 function getTabHtml(unique,tabName,nodeId){
-    var tabHtml = '<li class="active" unique="'+unique+'" nodeid="'+nodeId+'"><a href="#">' +
+    var tabHtml = '<li class="active" unique="'+unique+'" nodeid="'+nodeId+'"><a href="#" onclick="return false">' +
         '<span class="'+pageTypeIcon[pageType]+'"></span> '+tabName+' <span class="glyphicon glyphicon-remove tab-close"></span></a></li>'
     return tabHtml;
 }

@@ -26,7 +26,7 @@ public class JavadocDefinitionResolver extends AbstractDefinitionResolver{
     public JavadocDefinitionResolver(String srcPath){
         this.srcPath = srcPath;
     }
-    public static  class Doclet {
+    public static class Doclet {
 
         public static boolean start(RootDoc root) {
             ClassDoc doc = root.classes()[0];
@@ -51,7 +51,7 @@ public class JavadocDefinitionResolver extends AbstractDefinitionResolver{
                     JavadocDefinitionResolver.Doclet.class.getName(),
                     "-encoding","utf-8",
                     javaPath});
-            ClassDoc classDoc =  docs.get(fullyName);
+            ClassDoc classDoc = docs.get(fullyName);
             resolveNowAndInnerClassDefinition(clz,classDoc);
         }
     }
